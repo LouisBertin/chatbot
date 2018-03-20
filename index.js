@@ -13,7 +13,7 @@ app.get('/json', function (req, res) {
 })
 
 app.post('/action', function (req, res) {
-    let test = req.body.result.parameters.metro-line-number
+    let test = req.body.result.parameters['metro-line-number']
 
     res.json({
         "speech": "this text is spoken out loud if the platform supports voice interactions",
