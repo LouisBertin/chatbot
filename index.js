@@ -1,5 +1,6 @@
 const express = require('express')
 const path = require('path')
+const axios = require("axios");
 const PORT = process.env.PORT || 5000
 var bodyParser = require('body-parser');
 
@@ -8,7 +9,7 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 app.get('/', function (req, res) {
-    res.send('Hello World!')
+    res.send('Hello world !')
 })
 
 app.get('/json', function (req, res) {
@@ -19,15 +20,27 @@ app.post('/action', function (req, res) {
     switch (req.body.result.metadata.intentName) {
         case "webhook.metro.status":
             let metroLine = req.body.result.parameters['metro-line-number'];
-            res.json({
-                "speech": metroLine,
+            let apiUrl = 'https://api-ratp.pierre-grimaud.fr/v3/traffic/metros/' + metroLine + '?_format=json';
+
+            axios.get(apiUrl).then(function(response) {
+                let message = response.data.result.message;
+                res.json({
+                    "speech": message,
+                });
+            }).catch(function(error) {
+                let message = error;
+                res.json({
+                    "speech": message,
+                });
             });
+
             break;
         case "webhook.travel.time":
             let travelTime = 'tu en as pour 20 minutes';
             res.json({
                 "speech": travelTime,
             });
+
             break;
     }
 })
