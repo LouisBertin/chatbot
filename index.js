@@ -76,7 +76,7 @@ app.post('/action', function (req, res) {
             let workplace = req.body.result.parameters['street-address'];
 
             res.json({
-                "speech": workplace,
+                "speech": 'https://www.google.com/maps/search/?api=1&query=36.26577,-92.54324'
             });
 
             break;
