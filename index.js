@@ -1,8 +1,11 @@
 const express = require('express')
 const path = require('path')
 const PORT = process.env.PORT || 5000
+var bodyParser = require('body-parser');
 
 const app = express()
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 app.get('/', function (req, res) {
     res.send('Hello World!')
@@ -13,11 +16,10 @@ app.get('/json', function (req, res) {
 })
 
 app.post('/action', function (req, res) {
-    let body = JSON.parse(req.body)
-    let value = body.id
+    var user_id = req.body.id;
 
     res.json({
-        "speech": value,
+        "speech": user_id,
     });
 })
 
