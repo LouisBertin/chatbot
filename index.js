@@ -23,6 +23,12 @@ app.post('/action', function (req, res) {
                 "speech": metroLine,
             });
             break;
+        case "webhook.travel.time":
+            let travelTime = 'tu en as pour 20 minutes';
+            res.json({
+                "speech": travelTime,
+            });
+            break;
     }
 })
 
