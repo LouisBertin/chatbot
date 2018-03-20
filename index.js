@@ -16,11 +16,14 @@ app.get('/json', function (req, res) {
 })
 
 app.post('/action', function (req, res) {
-    let metroLine = req.body.result.parameters['metro-line-number'];
-
-    res.json({
-        "speech": metroLine,
-    });
+    switch (req.body.result.metadata.intentName) {
+        case "webhook.metro.status":
+            let metroLine = req.body.result.parameters['metro-line-number'];
+            res.json({
+                "speech": metroLine,
+            });
+            break;
+    }
 })
 
 app.listen(PORT, function () {
