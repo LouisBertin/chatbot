@@ -16,10 +16,10 @@ app.get('/json', function (req, res) {
 })
 
 app.post('/action', function (req, res) {
-    var user_id = req.body.id;
+    let metroLine = req.body.result.parameters.metro-line-number;
 
     res.json({
-        "speech": user_id,
+        "speech": metroLine,
     });
 })
 
