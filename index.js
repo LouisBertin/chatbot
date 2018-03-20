@@ -16,8 +16,7 @@ app.post('/action', function (req, res) {
     let test = req.query.id
 
     res.json({
-        "speech": "this text is spoken out loud if the platform supports voice interactions",
-        "displayText": test,
+        "speech": test,
     });
 })
 
