@@ -35,6 +35,23 @@ app.post('/action', function (req, res) {
             });
 
             break;
+        case "webhook.rer.status":
+            let rerLine = req.body.result.parameters['rer-line-letter'];
+            let apiUrl = 'https://api-ratp.pierre-grimaud.fr/v3/traffic/rers/' + rerLine + '?_format=json';
+
+            axios.get(apiUrl).then(function(response) {
+                let message = response.data.result.message;
+                res.json({
+                    "speech": message,
+                });
+            }).catch(function(error) {
+                let message = error;
+                res.json({
+                    "speech": message,
+                });
+            });
+
+            break;
         case "webhook.travel.time":
             let travelTime = 'tu en as pour 20 minutes';
             res.json({
