@@ -21,7 +21,7 @@ app.get('/gmap', function (req, res) {
         address: '39 rue de montreuil Vincennes'
     }, function(err, response) {
         if (!err) {
-            res.json(response.json.results);
+            res.json(response.json.results[0].formatted_address);
         }
     });
 })
@@ -83,24 +83,33 @@ app.post('/action', function (req, res) {
 
             break;
         case "webhook.user.data.workplace":
+            // get workplace
             let workplace = req.body.result.parameters['street-address'];
 
-            res.json({
-                "messages": [
-                    {
-                        "buttons": [
+            // geocoding
+            googleMapsClient.geocode({
+                address: workplace
+            }, function(err, response) {
+                if (!err) {
+                    let formated_adress = response.json.results[0].formatted_address
+
+                    res.json({
+                        "messages": [
                             {
-                                "postback": "Card Link URL or text",
-                                "text": "Card Link Title"
+                                "buttons": [
+                                    {
+                                        "postback": "https://www.google.com/maps/search/?api=1&query=" + formated_adress,
+                                        "text": "Voir mon lieu de travail"
+                                    }
+                                ],
+                                "imageUrl": `https://maps.googleapis.com/maps/api/staticmap?center=${formated_adress}&zoom=13&size=400x400`,
+                                "platform": "facebook",
+                                "title": "Cela correspond ?",
+                                "type": 1
                             }
-                        ],
-                        "imageUrl": "http://urltoimage.com",
-                        "platform": "facebook",
-                        "subtitle": "Card Subtitle",
-                        "title": "Card Title",
-                        "type": 1
-                    }
-                ]
+                        ]
+                    });
+                }
             });
 
             break;
