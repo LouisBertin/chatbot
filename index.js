@@ -13,7 +13,7 @@ app.get('/json', function (req, res) {
 })
 
 app.post('/action', function (req, res) {
-    let body = JSON.parse(req)
+    let body = JSON.parse(req.body)
     let value = body.id
 
     res.json({
