@@ -71,7 +71,7 @@ app.post('/action', function (req, res) {
             });
 
             break;
-        case "webhook.user.data - workplace":
+        case "webhook.user.data.workplace":
             let travelTime = 'tu en as pour 20 minutes';
             res.json({
                 "speech": 'it works',
