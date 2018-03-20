@@ -76,7 +76,12 @@ app.post('/action', function (req, res) {
             let workplace = req.body.result.parameters['street-address'];
 
             res.json({
-                "speech": 'https://www.google.fr/maps/place/32+Rue+Diderot,+94300+Vincennes/'
+                "attachment": {
+                    "type": "image",
+                    "payload": {
+                        "url": 'https://www.google.fr/maps/place/32+Rue+Diderot,+94300+Vincennes/'
+                    }
+                }
             });
 
             break;
