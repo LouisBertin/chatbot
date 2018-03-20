@@ -102,7 +102,7 @@ app.post('/action', function (req, res) {
                                         "text": "Voir mon lieu de travail"
                                     }
                                 ],
-                                "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?center=" + formated_adress + "&zoom=13&size=400x400",
+                                "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?center=" + formated_adress + "&zoom=13&size=400x400&KEY=vUJQ8ZWXE43NbHYG4qUB4utLsPU",
                                 "platform": "facebook",
                                 "title": "Cela correspond ?",
                                 "type": 1
