@@ -3,6 +3,9 @@ const path = require('path')
 const axios = require("axios");
 const PORT = process.env.PORT || 5000
 var bodyParser = require('body-parser');
+var googleMapsClient = require('@google/maps').createClient({
+    key: 'AIzaSyAW7MCC53fSBXr66c5f0lA6m5cf5RUyQOA'
+});
 
 const app = express()
 app.use(bodyParser.json()); // support json encoded bodies
@@ -12,8 +15,15 @@ app.get('/', function (req, res) {
     res.send('Hello world !')
 })
 
-app.get('/json', function (req, res) {
-    res.json({"foo": "bar"});
+app.get('/gmap', function (req, res) {
+    // Geocode an address.
+    googleMapsClient.geocode({
+        address: '39 rue de montreuil Vincennes'
+    }, function(err, response) {
+        if (!err) {
+            res.json(response.json.results);
+        }
+    });
 })
 
 app.post('/action', function (req, res) {
@@ -76,12 +86,21 @@ app.post('/action', function (req, res) {
             let workplace = req.body.result.parameters['street-address'];
 
             res.json({
-                "attachment": {
-                    "type": "image",
-                    "payload": {
-                        "url": 'https://www.google.fr/maps/place/32+Rue+Diderot,+94300+Vincennes/'
+                "messages": [
+                    {
+                        "buttons": [
+                            {
+                                "postback": "Card Link URL or text",
+                                "text": "Card Link Title"
+                            }
+                        ],
+                        "imageUrl": "http://urltoimage.com",
+                        "platform": "facebook",
+                        "subtitle": "Card Subtitle",
+                        "title": "Card Title",
+                        "type": 1
                     }
-                }
+                ]
             });
 
             break;
