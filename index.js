@@ -25,7 +25,10 @@ app.post('/action', function (req, res) {
             axios.get(apiUrl).then(function(response) {
                 let message = response.data.result.message;
                 if (response.data.result.slug === 'normal') {
-                    message = 'Bonne nouvelle, tout va bien pour le moment :)'
+                    message = 'Bonne nouvelle, tout va bien pour le moment :)';
+                }
+                if (response.data.result.slug === 'normal_trav') {
+                    message = 'Pas d\'accident ou de retards, juste les travaux qui continuent ! ' + message;
                 }
                 res.json({
                     "speech": message,
@@ -46,6 +49,9 @@ app.post('/action', function (req, res) {
                 let message = response.data.result.message;
                 if (response.data.result.slug === 'normal') {
                     message = 'C\'est étonnant mais on dirait que tout va bien sur la ligne aujourd\'hui :P';
+                }
+                if (response.data.result.slug === 'normal_trav') {
+                    message = 'Pas d\'accident ou de retards, juste les travaux qui continuent ! ' + message;
                 }
                 res.json({
                     "speech": message,
