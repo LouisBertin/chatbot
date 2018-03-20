@@ -8,6 +8,7 @@ express()
   .set('view engine', 'ejs')
   .get('/', (req, res) => res.render('pages/index'))
   .get('/hello', (req, res) => {
-      res.send('Hello World!')
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify({ a: 1 }, null, 3));
   })
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
