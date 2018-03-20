@@ -66,14 +66,14 @@ app.post('/action', function (req, res) {
 
             break;
         case "webhook.travel.time":
-            let travelTime = 'tu en as pour 20 minutes';
+            var travelTime = 'tu en as pour 20 minutes';
             res.json({
                 "speech": travelTime,
             });
 
             break;
         case "webhook.user.data - workplace":
-            let travelTime = 'tu en as pour 20 minutes';
+            var travelTime = 'tu en as pour 20 minutes';
             res.json({
                 "speech": 'it works',
             });
