@@ -19,8 +19,8 @@ app.get('/json', function (req, res) {
 app.post('/action', function (req, res) {
     switch (req.body.result.metadata.intentName) {
         case "webhook.metro.status":
-            let metroLine = req.body.result.parameters['metro-line-number'];
-            let apiUrl = 'https://api-ratp.pierre-grimaud.fr/v3/traffic/metros/' + metroLine + '?_format=json';
+            var metroLine = req.body.result.parameters['metro-line-number'];
+            var apiUrl = 'https://api-ratp.pierre-grimaud.fr/v3/traffic/metros/' + metroLine + '?_format=json';
 
             axios.get(apiUrl).then(function(response) {
                 let message = response.data.result.message;
@@ -36,8 +36,8 @@ app.post('/action', function (req, res) {
 
             break;
         case "webhook.rer.status":
-            let rerLine = req.body.result.parameters['rer-line-letter'];
-            let apiUrl = 'https://api-ratp.pierre-grimaud.fr/v3/traffic/rers/' + rerLine + '?_format=json';
+            var rerLine = req.body.result.parameters['rer-line-letter'];
+            var apiUrl = 'https://api-ratp.pierre-grimaud.fr/v3/traffic/rers/' + rerLine + '?_format=json';
 
             axios.get(apiUrl).then(function(response) {
                 let message = response.data.result.message;
