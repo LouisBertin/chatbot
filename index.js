@@ -73,8 +73,10 @@ app.post('/action', function (req, res) {
 
             break;
         case "webhook.user.data.workplace":
+            let workplace = req.body.result.parameters['street-address'];
+
             res.json({
-                "speech": 'it works',
+                "speech": workplace,
             });
 
             break;
