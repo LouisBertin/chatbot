@@ -13,10 +13,11 @@ app.get('/json', function (req, res) {
 })
 
 app.post('/action', function (req, res) {
-    let test = req.query.id
+    let body = JSON.parse(req)
+    let value = body.id
 
     res.json({
-        "speech": test,
+        "speech": value,
     });
 })
 
