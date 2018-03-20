@@ -20,6 +20,7 @@ app.post('/action', function (req, res) {
     switch (req.body.result.metadata.intentName) {
         case "webhook.metro.status":
             var metroLine = req.body.result.parameters['metro-line-number'];
+            metroLine = metroLine.replace(' bis', 'b');
             var apiUrl = 'https://api-ratp.pierre-grimaud.fr/v3/traffic/metros/' + metroLine + '?_format=json';
 
             axios.get(apiUrl).then(function(response) {
@@ -65,14 +66,13 @@ app.post('/action', function (req, res) {
 
             break;
         case "webhook.travel.time":
-            let travelTime = 'tu en as pour 20 minutes';
+            var travelTime = 'tu en as pour 20 minutes';
             res.json({
                 "speech": travelTime,
             });
 
             break;
         case "webhook.user.data.workplace":
-            let travelTime = 'tu en as pour 20 minutes';
             res.json({
                 "speech": 'it works',
             });
