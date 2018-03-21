@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 var googleMapsClient = require('@google/maps').createClient({
     key: 'AIzaSyAW7MCC53fSBXr66c5f0lA6m5cf5RUyQOA'
 });
+const connectionString = process.env.DATABASE_URL || "postgres://rmwavbfvtbeyss:3825e353072eeb06ef4687fc7655ae68b7a99c4c7c51e26e67026801cd30ceee@ec2-54-204-44-140.compute-1.amazonaws.com:5432/dalifn8rdhdpfm"
 
 const app = express()
 app.use(bodyParser.json()); // support json encoded bodies
@@ -267,7 +268,29 @@ app.post('/action', function (req, res) {
 
             break;
         case "webhook.user.data.workplace.yes":
-            console.log(req.body.originalRequest.data.sender.id)
+            var fbuserId = req.body.originalRequest.data.sender.id
+            var workplace = req.body.result.parameters['street-address'];
+
+            googleMapsClient.geocode({
+                address: workplace
+            }, function(err, response) {
+                if (!err) {
+                    var formated_adress = response.json.results[0].formatted_address
+                    var lat = response.json.results[0].geometry.location.lat
+                    var lng = response.json.results[0].geometry.location.lng
+
+                    pg.connect(connectionString, (err, client, done) => {
+                        if(err) {
+                            done();
+                            console.log(err);
+                            return res.status(500).json({success: false, data: err});
+                        }
+
+                        client.query('INSERT INTO users(id, address, lat, lng) values($1, $2, $3, $4)',
+                            [fbuserId, formated_adress, lat, lng]);
+                    });
+                }
+            });
 
             break;
     }
