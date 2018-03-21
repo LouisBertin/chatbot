@@ -232,7 +232,7 @@ app.post('/action', function (req, res) {
                     console.log(contexts[i].parameters.lat)
 
                     from = {
-                        position: {lat: contexts[i].parameters.lat, lng: contexts[i].parameters.long}
+                        latLng: {lat: contexts[i].parameters.lat, lng: contexts[i].parameters.long}
                     }
                 }
             }
