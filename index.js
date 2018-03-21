@@ -30,8 +30,19 @@ app.get('/', function (req, res) {
             }, function(err, response) {
                 if (!err) {
                     to = response.json.results[0].formatted_address;
+
+                    console.log(response.json.results[0].geometry.location.lat)
+                    console.log(response.json.results[0].geometry.location.lng)
+
                     googleMapsClient.directions({
-                        origin: from,
+                        //origin: [parseFloat(response.json.results[0].geometry.location.lat), parseFloat(response.json.results[0].geometry.location.lng)],
+                        //origin: { lat: response.json.results[0].geometry.location.lat, lng: response.json.results[0].geometry.location.lng },
+                        origin: {
+                            lat: response.json.results[0].geometry.location.lat,
+                            lng: response.json.results[0].geometry.location.lng
+                        },
+                        //origin: '41.43206,-81.38992',
+                        //origin: from,
                         destination: to,
                         //arrival_time: inOneHour,
                         mode: 'transit',
@@ -45,6 +56,8 @@ app.get('/', function (req, res) {
 
                             var message = '';
                             var steps = response.json.routes[0].legs[0].steps;
+
+                            res.json(steps)
                             for (var i = 0, len = steps.length; i < len; i++) {
 
                                 if (steps[i].travel_mode == 'TRANSIT') {
