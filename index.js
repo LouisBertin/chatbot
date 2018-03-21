@@ -88,9 +88,10 @@ app.post('/action', function (req, res) {
                 let message = response.data.result.message;
                 if (response.data.result.slug === 'normal') {
                     message = 'Bonne nouvelle, tout va bien pour le moment :)';
-                }
-                if (response.data.result.slug === 'normal_trav') {
+                } else if (response.data.result.slug === 'normal_trav') {
                     message = 'Pas d\'accident ou de retards, juste les travaux qui continuent ! ' + message;
+                } else {
+                    message += ' ⚠🚇';
                 }
                 res.json({
                     "speech": message,
@@ -111,9 +112,10 @@ app.post('/action', function (req, res) {
                 let message = response.data.result.message;
                 if (response.data.result.slug === 'normal') {
                     message = 'C\'est étonnant mais on dirait que tout va bien sur la ligne aujourd\'hui :P';
-                }
-                if (response.data.result.slug === 'normal_trav') {
-                    message = 'Pas d\'accident ou de retards, juste les travaux qui continuent ! ' + message;
+                } else if (response.data.result.slug === 'normal_trav') {
+                    message = 'Pas d\'accident ou de retards, juste les travaux qui continuent ! ' + message + ' 🚧';
+                } else {
+                    message += ' ⚠🚇';
                 }
                 res.json({
                     "speech": message,
@@ -218,9 +220,9 @@ app.post('/action', function (req, res) {
                                     }
 
                                     if (message.length == 0) {
-                                        message = 'Le plus rapide c\'est à pied :)';
+                                        message = 'Le plus rapide c\'est à pied :)👟';
                                     } else {
-                                        message += 'Voilà t\'es arrivé :)👟';
+                                        message += 'Voilà t\'es arrivé ! :)🚩';
                                     }
 
                                     res.json({
