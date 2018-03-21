@@ -239,6 +239,8 @@ app.post('/action', function (req, res) {
             var to = req.body.result.parameters['street-address-to'];
 
             googleMapsClient.geocode(from, function(err, response) {
+                console.log(err)
+                console.log( response.json)
                 if (!err) {
                     from = response.json.results[0].formatted_address;
 
