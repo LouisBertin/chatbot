@@ -114,7 +114,11 @@ app.post('/action', function (req, res) {
             break;
         case "webhook.travel.time.from":
             var from = req.body.result.parameters['street-address-from'];
+            console.log('from');
+            console.log(from);
             var to = req.body.result.parameters['street-address-to'];
+            console.log('to');
+            console.log(to);
 
             googleMapsClient.geocode({
                 address: from
