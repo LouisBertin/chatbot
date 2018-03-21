@@ -21,7 +21,7 @@ app.get('/gmap', function (req, res) {
         address: '39 rue de montreuil Vincennes'
     }, function(err, response) {
         if (!err) {
-            res.json(response.json.results[0].geometry.location.lat);
+            res.json(response.json.results[0].geometry.location);
         }
     });
 })
@@ -92,6 +92,8 @@ app.post('/action', function (req, res) {
             }, function(err, response) {
                 if (!err) {
                     let formated_adress = response.json.results[0].formatted_address
+                    var lat = response.json.results[0].geometry.location.lat
+                    var lng = response.json.results[0].geometry.location.lng
 
                     res.json({
                         "messages": [
@@ -102,7 +104,7 @@ app.post('/action', function (req, res) {
                                         "text": "Voir mon lieu de travail"
                                     }
                                 ],
-                                "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?center="+response.json.results[0].geometry.location.lat+","+response.json.results[0].geometry.location.lng+"&zoom=14&size=400x400",
+                                "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&zoom=16&markers=size:mid%7Ccolor:red%7C"+lat+","+lng,
                                 "platform": "facebook",
                                 "title": "Cela correspond ?",
                                 "type": 1
