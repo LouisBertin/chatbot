@@ -272,12 +272,12 @@ app.post('/action', function (req, res) {
             break;
         case "webhook.user.data.workplace.yes":
             var fbuserId = req.body.originalRequest.data.sender.id
-            var workplace = req.body.result.parameters['street-address'];
+            var address = req.body.result.parameters['street-address'];
 
             console.log('toto')
 
             googleMapsClient.geocode({
-                address: workplace
+                address: address
             }, function(err, response) {
                 if (!err) {
                     console.log('lol')
