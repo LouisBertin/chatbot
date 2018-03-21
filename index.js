@@ -220,6 +220,7 @@ app.post('/action', function (req, res) {
         case "webhook.travel.route.from":
             var contexts = req.body.result.contexts;
             var from = {};
+            var latLngFrom = {};
 
             for (var i = 0, len = contexts.length; i < len; i++) {
                 if (contexts[i].name == 'webhooktravelroute-followup') {
@@ -228,21 +229,23 @@ app.post('/action', function (req, res) {
                     }
                 }
                 if (contexts[i].name == 'facebook_location') {
-                    console.log(contexts[i].parameters.long)
-                    console.log(contexts[i].parameters.lat)
-
-                    from = {
-                        latLng: {lat: contexts[i].parameters.lat, lng: contexts[i].parameters.long}
+                    latLngFrom = {
+                        lat: contexts[i].parameters.lat,
+                        lng: contexts[i].parameters.long
                     }
                 }
             }
             var to = req.body.result.parameters['street-address-to'];
 
             googleMapsClient.geocode(from, function(err, response) {
-                console.log(err)
-                console.log( response.json)
                 if (!err) {
-                    from = response.json.results[0].formatted_address;
+                    //from = response.json.results[0].formatted_address;
+                    if (latLngFrom.lat.length <= 0) {
+                        latLngFrom = {
+                            lat: response.json.results[0].geometry.location.lat,
+                            lng: response.json.results[0].geometry.location.lng
+                        }
+                    }
 
                     googleMapsClient.geocode({
                         address: to
@@ -251,7 +254,7 @@ app.post('/action', function (req, res) {
                             to = response.json.results[0].formatted_address;
                             googleMapsClient.directions({
                                 origin: to,
-                                destination: from,
+                                destination: latLngFrom,
                                 mode: 'transit',
                                 language: 'fr',
                                 //mode: 'walking',
