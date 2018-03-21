@@ -113,16 +113,17 @@ app.post('/action', function (req, res) {
 
             break;
         case "webhook.travel.time":
-            var from, to;
+            var from = '6 rue Nolet, Paris';
+            var to = req.body.result.parameters['street-address'];
 
             googleMapsClient.geocode({
-                address: '6 rue Nolet, Paris'
+                address: from
             }, function(err, response) {
                 if (!err) {
                     from = response.json.results[0].formatted_address;
 
                     googleMapsClient.geocode({
-                        address: '39 rue de montreuil Vincennes'
+                        address: to
                     }, function(err, response) {
                         if (!err) {
                             to = response.json.results[0].formatted_address;
