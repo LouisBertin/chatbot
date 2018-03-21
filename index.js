@@ -8,6 +8,8 @@ var googleMapsClient = require('@google/maps').createClient({
 });
 const pg = require('pg');
 const connectionString = "postgres://rmwavbfvtbeyss:3825e353072eeb06ef4687fc7655ae68b7a99c4c7c51e26e67026801cd30ceee@ec2-54-204-44-140.compute-1.amazonaws.com:5432/dalifn8rdhdpfm"
+var client = new pg.Client(connectionString);
+client.connect();
 
 const app = express()
 app.use(bodyParser.json()); // support json encoded bodies
@@ -329,19 +331,8 @@ app.post('/action', function (req, res) {
                     var lng = response.json.results[0].geometry.location.lng
 
                     console.log('lol2')
-
-                    pg.connect(connectionString, (err, client, done) => {
-                        if(err) {
-                            done();
-                            console.log(err);
-                            return res.status(500).json({success: false, data: err});
-                        }
-
-                        console.log('mdr')
-
-                        client.query('INSERT INTO users (id, address, lat, lng) VALUES($1, $2, $3, $4)',
-                            [fbuserId, formated_adress, lat, lng]);
-                    });
+                    client.query('INSERT INTO users(id, address, lat, lng) values($1, $2, $3, $4)',
+                        [fbuserId, formated_adress, lat, lng]);
                 }
             });
 
