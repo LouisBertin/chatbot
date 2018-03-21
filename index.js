@@ -183,9 +183,6 @@ app.post('/action', function (req, res) {
             }
             var to = req.body.result.parameters['street-address-to'];
 
-            console.log(req.body.result)
-
-
             googleMapsClient.geocode({
                 address: from
             }, function(err, response) {
@@ -226,6 +223,10 @@ app.post('/action', function (req, res) {
             for (var i = 0, len = contexts.length; i < len; i++) {
                 if (contexts[i].name == 'webhooktravelroute-followup') {
                     var from = contexts[i].parameters['street-address-from'];
+                }
+                if (contexts[i].name == 'facebook_location') {
+                    console.log(contexts[i].parameters)
+                    //var from = contexts[i].parameters['street-address-from'];
                 }
             }
             var to = req.body.result.parameters['street-address-to'];
