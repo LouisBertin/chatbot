@@ -267,7 +267,7 @@ app.post('/action', function (req, res) {
 
             break;
         case "webhook.user.data.workplace.yes":
-            console.log(req)
+            console.log(req.body)
 
             break;
     }
