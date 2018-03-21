@@ -318,19 +318,14 @@ app.post('/action', function (req, res) {
             var fbuserId = req.body.originalRequest.data.sender.id
             var address = req.body.result.contexts[0].parameters['street-address'];
 
-            console.log('toto')
-
             googleMapsClient.geocode({
                 address: address
             }, function(err, response) {
                 if (!err) {
-                    console.log('lol')
-
                     var formated_adress = response.json.results[0].formatted_address
                     var lat = response.json.results[0].geometry.location.lat
                     var lng = response.json.results[0].geometry.location.lng
 
-                    console.log('lol2')
                     client.query('INSERT INTO users(id, address, lat, lng) values($1, $2, $3, $4)',
                         [parseInt(fbuserId), formated_adress, lat, lng]);
                 }
