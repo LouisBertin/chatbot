@@ -86,7 +86,7 @@ app.post('/action', function (req, res) {
             // get workplace
             let workplace = req.body.result.parameters['street-address'];
 
-            console.log(req.body.originalRequest);
+            console.log(req.body.originalRequest.data.sender);
 
             // geocoding
             googleMapsClient.geocode({
