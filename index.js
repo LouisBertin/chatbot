@@ -139,7 +139,7 @@ app.post('/action', function (req, res) {
                                 if (!err) {
 
                                     res.json({
-                                        "speech": 'Avec les transports en commun tu en as pour ' + response.json.routes[0].legs[0].duration.text + ':)',
+                                        "speech": 'Avec les transports en commun tu en as pour ' + response.json.routes[0].legs[0].duration.text + ' :)',
                                     });
                                 }
                             });
