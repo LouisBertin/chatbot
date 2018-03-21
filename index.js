@@ -39,8 +39,21 @@ app.get('/', function (req, res) {
                     }, function(err, response) {
                         if (!err) {
 
+                            var message = '';
+                            var steps = response.json.routes[0].legs[0].steps;
+                            for (var i = 0, len = steps.length; i < len; i++) {
+
+                                if (steps[i].travel_mode == 'TRANSIT') {
+                                    message += 'Prend la ligne ' + steps[i].transit_details.line.short_name;
+                                    message += ' de ' + steps[i].transit_details.departure_stop.name + ' jusque ' + steps[i].transit_details.arrival_stop.name;
+                                    message += "\n " + steps[i].html_instructions;
+                                    message += "\n (" + steps[i].duration.text + ")";
+                                }
+                            }
+
                             res.json(
-                                response.json.routes[0].legs[0]
+                                //response.json.routes[0].legs[0].steps
+                                message
                             );
                         }
                     });
@@ -112,17 +125,24 @@ app.post('/action', function (req, res) {
             });
 
             break;
-        case "webhook.travel.time":
-            var from, to;
+        case "webhook.travel.time.from":
+            var contexts = req.body.result.contexts;
+
+            for (var i = 0, len = contexts.length; i < len; i++) {
+                if (contexts[i].name == 'webhooktraveltime-followup') {
+                    var from = contexts[i].parameters['street-address-from'];
+                }
+            }
+            var to = req.body.result.parameters['street-address-to'];
 
             googleMapsClient.geocode({
-                address: '6 rue Nolet, Paris'
+                address: from
             }, function(err, response) {
                 if (!err) {
                     from = response.json.results[0].formatted_address;
 
                     googleMapsClient.geocode({
-                        address: '39 rue de montreuil Vincennes'
+                        address: to
                     }, function(err, response) {
                         if (!err) {
                             to = response.json.results[0].formatted_address;
@@ -133,13 +153,77 @@ app.post('/action', function (req, res) {
                                 language: 'fr',
                                 //mode: 'walking',
                                 //alternatives: true,
-                                transit_mode: ['bus', 'rail'],
+                                transit_mode: ['rail'],
                                 transit_routing_preference: 'fewer_transfers',
                             }, function(err, response) {
                                 if (!err) {
 
                                     res.json({
                                         "speech": 'Avec les transports en commun tu en as pour ' + response.json.routes[0].legs[0].duration.text + ' :)',
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+
+            break;
+        case "webhook.travel.route.from":
+            var contexts = req.body.result.contexts;
+
+            for (var i = 0, len = contexts.length; i < len; i++) {
+                if (contexts[i].name == 'webhooktravelroute-followup') {
+                    var from = contexts[i].parameters['street-address-from'];
+                }
+            }
+            var to = req.body.result.parameters['street-address-to'];
+
+            googleMapsClient.geocode({
+                address: from
+            }, function(err, response) {
+                if (!err) {
+                    from = response.json.results[0].formatted_address;
+
+                    googleMapsClient.geocode({
+                        address: to
+                    }, function(err, response) {
+                        if (!err) {
+                            to = response.json.results[0].formatted_address;
+                            googleMapsClient.directions({
+                                origin: to,
+                                destination: from,
+                                mode: 'transit',
+                                language: 'fr',
+                                //mode: 'walking',
+                                //alternatives: true,
+                                transit_mode: ['rail'],
+                                transit_routing_preference: 'fewer_transfers',
+                            }, function(err, response) {
+                                if (!err) {
+                                    var message = '';
+                                    var steps = response.json.routes[0].legs[0].steps;
+                                    for (var i = 0, len = steps.length; i < len; i++) {
+
+                                        if (steps[i].travel_mode == 'TRANSIT') {
+                                            if (i !== 0 && i < len - 1) {
+                                                message += 'Après tu ';
+                                            }
+                                            message += 'prend la ligne ' + steps[i].transit_details.line.short_name;
+                                            message += ' de ' + steps[i].transit_details.departure_stop.name + ' jusque ' + steps[i].transit_details.arrival_stop.name;
+                                            message += ' (' + steps[i].html_instructions + ')';
+                                            message += ' ca te prendra ' + steps[i].duration.text + '. ';
+                                        }
+                                    }
+
+                                    if (message.length == 0) {
+                                        message = 'Le plus rapide c\'est à pied :)';
+                                    } else {
+                                        message += 'Voilà t\'es arrivé :)';
+                                    }
+
+                                    res.json({
+                                        "speech": message,
                                     });
                                 }
                             });
