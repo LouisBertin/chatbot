@@ -203,10 +203,10 @@ app.post('/action', function (req, res) {
                                 if (!err) {
                                     var message = '';
                                     var steps = response.json.routes[0].legs[0].steps;
-                                    for (var i = 1, len = steps.length; i <= len; i++) {
+                                    for (var i = 0, len = steps.length; i < len; i++) {
 
                                         if (steps[i].travel_mode == 'TRANSIT') {
-                                            if (i < len) {
+                                            if (i < len - 1) {
                                                 message += 'Après tu ';
                                             }
                                             message += 'prend la ligne ' + steps[i].transit_details.line.short_name;
