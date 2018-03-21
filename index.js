@@ -206,7 +206,7 @@ app.post('/action', function (req, res) {
                                     for (var i = 0, len = steps.length; i < len; i++) {
 
                                         if (steps[i].travel_mode == 'TRANSIT') {
-                                            if (i != 0 && i < len - 1) {
+                                            if (i !== 0 && i < len - 1) {
                                                 message += 'Après tu ';
                                             }
                                             message += 'prend la ligne ' + steps[i].transit_details.line.short_name;
