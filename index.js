@@ -289,7 +289,6 @@ app.post('/action', function (req, res) {
             const results = []
             var currentFbId = parseInt(req.body.originalRequest.data.sender.id)
             client.query('SELECT id FROM users', function (err, result) {
-                done(); // closing the connection;
                 if(err){
                     console.log(err);
                     res.status(400).send(err);
