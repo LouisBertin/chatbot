@@ -191,8 +191,8 @@ app.post('/action', function (req, res) {
                         if (!err) {
                             to = response.json.results[0].formatted_address;
                             googleMapsClient.directions({
-                                origin: from,
-                                destination: to,
+                                origin: to,
+                                destination: from,
                                 mode: 'transit',
                                 language: 'fr',
                                 //mode: 'walking',
