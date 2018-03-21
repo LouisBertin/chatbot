@@ -281,6 +281,10 @@ app.post('/action', function (req, res) {
             });
 
             break;
+        case "webhook.user.data":
+            console.log(req.body)
+
+            break
         case "webhook.user.data.workplace":
             // get workplace
             var workplace = req.body.result.parameters['street-address'];
