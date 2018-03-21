@@ -328,6 +328,8 @@ app.post('/action', function (req, res) {
                     var lat = response.json.results[0].geometry.location.lat
                     var lng = response.json.results[0].geometry.location.lng
 
+                    console.log('lol2')
+
                     pg.connect(connectionString, (err, client, done) => {
                         if(err) {
                             done();
