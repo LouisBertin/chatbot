@@ -223,7 +223,7 @@ app.post('/action', function (req, res) {
                                     if (message.length == 0) {
                                         message = 'Le plus rapide c\'est à pied :)👟';
                                     } else {
-                                        message += ' es arrivé ! :)🚩';
+                                        message += 'es arrivé ! :)🚩';
                                     }
 
                                     res.json({
