@@ -90,7 +90,7 @@ app.post('/action', function (req, res) {
                 if (response.data.result.slug === 'normal') {
                     message = 'Bonne nouvelle, tout va bien pour le moment :)';
                 } else if (response.data.result.slug === 'normal_trav') {
-                    message = 'Pas d\'accident ou de retards, juste les travaux qui continuent ! ' + message;
+                    message = 'Pas d\'accident ou de retards, juste les travaux qui continuent ! ' + message + ' 🚧';
                 } else {
                     message += ' ⚠🚇';
                 }
