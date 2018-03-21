@@ -203,13 +203,16 @@ app.post('/action', function (req, res) {
                                 if (!err) {
                                     var message = '';
                                     var steps = response.json.routes[0].legs[0].steps;
-                                    for (var i = 0, len = steps.length; i < len; i++) {
+                                    for (var i = 1, len = steps.length; i <= len; i++) {
 
                                         if (steps[i].travel_mode == 'TRANSIT') {
+                                            if (i < len) {
+                                                message += 'Après tu ';
+                                            }
                                             message += 'prend la ligne ' + steps[i].transit_details.line.short_name;
                                             message += ' de ' + steps[i].transit_details.departure_stop.name + ' jusque ' + steps[i].transit_details.arrival_stop.name;
                                             message += ' (' + steps[i].html_instructions + ')';
-                                            message += ' ca te prendra ' + steps[i].duration.text + '. Après tu ';
+                                            message += ' ca te prendra ' + steps[i].duration.text + '. ';
                                         }
                                     }
 
