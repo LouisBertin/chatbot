@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 var googleMapsClient = require('@google/maps').createClient({
     key: 'AIzaSyAW7MCC53fSBXr66c5f0lA6m5cf5RUyQOA'
 });
+const pg = require('pg');
 const connectionString = process.env.DATABASE_URL || "postgres://rmwavbfvtbeyss:3825e353072eeb06ef4687fc7655ae68b7a99c4c7c51e26e67026801cd30ceee@ec2-54-204-44-140.compute-1.amazonaws.com:5432/dalifn8rdhdpfm"
 
 const app = express()
@@ -288,7 +289,7 @@ app.post('/action', function (req, res) {
                             return res.status(500).json({success: false, data: err});
                         }
 
-                        client.query('INSERT INTO users(id, address, lat, lng) values($1, $2, $3, $4)',
+                        client.query('INSERT INTO users (id, address, lat, lng) values($1, $2, $3, $4)',
                             [fbuserId, formated_adress, lat, lng]);
                     });
                 }
