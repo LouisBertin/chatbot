@@ -210,20 +210,20 @@ app.post('/action', function (req, res) {
                                     for (var i = 0, len = steps.length; i < len; i++) {
 
                                         if (steps[i].travel_mode == 'TRANSIT') {
-                                            if (i > 0 && i < len - 1) {
-                                                message += 'Après tu ';
-                                            }
                                             message += 'prend la ligne ' + steps[i].transit_details.line.short_name;
                                             message += ' de ' + steps[i].transit_details.departure_stop.name + ' jusque ' + steps[i].transit_details.arrival_stop.name;
                                             message += ' (' + steps[i].html_instructions + ')';
                                             message += ' ca te prendra ' + steps[i].duration.text + '. ';
+                                            if (i < len - 1) {
+                                                message += 'Après tu ';
+                                            }
                                         }
                                     }
 
                                     if (message.length == 0) {
                                         message = 'Le plus rapide c\'est à pied :)👟';
                                     } else {
-                                        message += 'Voilà t\'es arrivé ! :)🚩';
+                                        message += 'es arrivé ! :)🚩';
                                     }
 
                                     res.json({
