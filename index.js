@@ -287,7 +287,7 @@ app.post('/action', function (req, res) {
             break;
         case "webhook.user.data":
             var currentFbId = parseInt(req.body.originalRequest.data.sender.id)
-            var userId = client.query("SELECT id FROM users")
+            var userId = client.query('SELECT id FROM users');
 
             console.log(userId)
 
