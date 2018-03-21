@@ -290,7 +290,7 @@ app.post('/action', function (req, res) {
             });
 
             break;
-        case "webhook.user.data":
+/*        case "webhook.user.data":
             const results = []
             var currentFbId = parseInt(req.body.originalRequest.data.sender.id)
             client.query('SELECT id FROM users', function (err, result) {
@@ -301,7 +301,7 @@ app.post('/action', function (req, res) {
                 console.log(result)
             });
 
-            break;
+            break;*/
         case "webhook.user.data.workplace":
             // get workplace
             var workplace = req.body.result.parameters['street-address'];
