@@ -183,9 +183,6 @@ app.post('/action', function (req, res) {
             }
             var to = req.body.result.parameters['street-address-to'];
 
-            console.log(req.body.result)
-
-
             googleMapsClient.geocode({
                 address: from
             }, function(err, response) {
@@ -229,6 +226,8 @@ app.post('/action', function (req, res) {
                 }
             }
             var to = req.body.result.parameters['street-address-to'];
+
+            console.log(req.body.result)
 
             googleMapsClient.geocode({
                 address: from
