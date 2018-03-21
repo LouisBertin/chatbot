@@ -295,18 +295,6 @@ app.post('/action', function (req, res) {
             });
 
             break;
-/*        case "webhook.user.data":
-            const results = []
-            var currentFbId = parseInt(req.body.originalRequest.data.sender.id)
-            client.query('SELECT id FROM users', function (err, result) {
-                if(err){
-                    console.log(err);
-                    res.status(400).send(err);
-                }
-                console.log(result)
-            });
-
-            break;*/
         case "webhook.user.data.workplace":
             // get workplace
             var workplace = req.body.result.parameters['street-address'];
@@ -352,8 +340,8 @@ app.post('/action', function (req, res) {
                     var lat = response.json.results[0].geometry.location.lat
                     var lng = response.json.results[0].geometry.location.lng
 
-                    client.query('INSERT INTO users(id, address_code, address_txt, lat, lng) values($1, $2, $3, $4)',
-                        [parseInt(fbuserId), 'work' , formated_adress, lat, lng]);
+                    client.query('INSERT INTO users(id, address_code, address_txt, lat, lng) values($1, $2, $3, $4, $5)',
+                        [parseInt(fbuserId), 'work', formated_adress, lat, lng]);
                 }
             });
 
