@@ -272,7 +272,7 @@ app.post('/action', function (req, res) {
             break;
         case "webhook.user.data.workplace.yes":
             var fbuserId = req.body.originalRequest.data.sender.id
-            var address = req.body.result.parameters['street-address'];
+            var address = req.body.result.contexts.parameters['street-address'];
 
             console.log('toto')
 
@@ -281,7 +281,6 @@ app.post('/action', function (req, res) {
             }, function(err, response) {
                 if (!err) {
                     console.log('lol')
-
 
                     var formated_adress = response.json.results[0].formatted_address
                     var lat = response.json.results[0].geometry.location.lat
