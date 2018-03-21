@@ -116,16 +116,10 @@ app.post('/action', function (req, res) {
             var contexts = req.body.result.contexts;
 
             for (var i = 0, len = contexts.length; i < len; i++) {
-                
-                console.log(contexts[i])
-
                 if (contexts[i].name == 'webhooktraveltime-followup') {
                     var from = contexts[i].parameters['street-address-from'];
                 }
             }
-
-            console.log(from)
-
             var to = req.body.result.parameters['street-address-to'];
 
             googleMapsClient.geocode({
