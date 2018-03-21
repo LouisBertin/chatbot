@@ -332,7 +332,7 @@ app.post('/action', function (req, res) {
 
                     console.log('lol2')
                     client.query('INSERT INTO users(id, address, lat, lng) values($1, $2, $3, $4)',
-                        [fbuserId, formated_adress, lat, lng]);
+                        [parseInt(fbuserId), formated_adress, lat, lng]);
                 }
             });
 
