@@ -286,15 +286,15 @@ app.post('/action', function (req, res) {
 
             break;
         case "webhook.user.data":
-            var results = []
+            const results = []
             var currentFbId = parseInt(req.body.originalRequest.data.sender.id)
-            var query = client.query('SELECT id FROM users');
-            query.on('row', (row) => {
-                results.push(row);
-            });
-            query.on('end', () => {
-                done();
-                console.log(results)
+            client.query('SELECT id FROM users', function (err, result) {
+                done(); // closing the connection;
+                if(err){
+                    console.log(err);
+                    res.status(400).send(err);
+                }
+                console.log(result.rows)
             });
 
             break;
