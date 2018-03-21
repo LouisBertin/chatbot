@@ -298,7 +298,7 @@ app.post('/action', function (req, res) {
                     console.log(err);
                     res.status(400).send(err);
                 }
-                console.log(result.rows.id)
+                console.log(result.rows.anonymous)
             });
 
             break;
