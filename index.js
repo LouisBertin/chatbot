@@ -237,8 +237,6 @@ app.post('/action', function (req, res) {
             // get workplace
             let workplace = req.body.result.parameters['street-address'];
 
-            console.log(req.body.originalRequest.data.sender.id);
-
             // geocoding
             googleMapsClient.geocode({
                 address: workplace
@@ -266,6 +264,13 @@ app.post('/action', function (req, res) {
                     });
                 }
             });
+
+            break;
+        case "webhook.user.data.workplace.yes":
+            let workplace = req.body.result.parameters['street-address']
+            let fbUserId = req.body.originalRequest.data.sender.id
+
+            console.log(req.body)
 
             break;
     }
