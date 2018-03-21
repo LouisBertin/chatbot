@@ -247,6 +247,8 @@ app.post('/action', function (req, res) {
                         }
                     }
 
+                    console.log(latLngFrom)
+
                     googleMapsClient.geocode({
                         address: to
                     }, function(err, response) {
