@@ -222,18 +222,23 @@ app.post('/action', function (req, res) {
 
             for (var i = 0, len = contexts.length; i < len; i++) {
                 if (contexts[i].name == 'webhooktravelroute-followup') {
-                    var from = contexts[i].parameters['street-address-from'];
+                    var from = {
+                        address: contexts[i].parameters['street-address-from']
+                    }
                 }
                 if (contexts[i].name == 'facebook_location') {
-                    console.log(contexts[i].parameters)
-                    //var from = contexts[i].parameters['street-address-from'];
+                    console.log(contexts[i].parameters.long)
+                    console.log(contexts[i].parameters.lat)
+                    console.log(googleMapsClient.LatLng(-34.397, 150.644))
+
+                    var from = {
+                        location: googleMapsClient.LatLng(-34.397, 150.644)
+                    }
                 }
             }
             var to = req.body.result.parameters['street-address-to'];
 
-            googleMapsClient.geocode({
-                address: from
-            }, function(err, response) {
+            googleMapsClient.geocode(from, function(err, response) {
                 if (!err) {
                     from = response.json.results[0].formatted_address;
 
