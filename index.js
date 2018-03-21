@@ -12,7 +12,44 @@ app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 app.get('/', function (req, res) {
-    res.send('Hello world !')
+    // test GMAP API returns
+    var from, to;
+
+    googleMapsClient.geocode({
+        address: '6 rue Nolet, Paris'
+    }, function(err, response) {
+        if (!err) {
+            from = response.json.results[0].formatted_address;
+
+            googleMapsClient.geocode({
+                address: '39 rue de montreuil Vincennes'
+            }, function(err, response) {
+                if (!err) {
+                    to = response.json.results[0].formatted_address;
+                    googleMapsClient.directions({
+                        origin: from,
+                        destination: to,
+                        //arrival_time: inOneHour,
+                        mode: 'transit',
+                        language: 'fr',
+                        //mode: 'walking',
+                        //alternatives: true,
+                        transit_mode: ['bus', 'rail'],
+                        transit_routing_preference: 'fewer_transfers',
+                    }, function(err, response) {
+                        if (!err) {
+
+                            res.json(
+                                response.json.routes[0].legs[0]
+                            );
+                        }
+                    });
+                }
+            });
+        }
+    });
+
+    //res.send('Hello world !')
 })
 
 app.get('/gmap', function (req, res) {
@@ -76,9 +113,39 @@ app.post('/action', function (req, res) {
 
             break;
         case "webhook.travel.time":
-            var travelTime = 'tu en as pour 20 minutes';
-            res.json({
-                "speech": travelTime,
+            var from, to;
+
+            googleMapsClient.geocode({
+                address: '6 rue Nolet, Paris'
+            }, function(err, response) {
+                if (!err) {
+                    from = response.json.results[0].formatted_address;
+
+                    googleMapsClient.geocode({
+                        address: '39 rue de montreuil Vincennes'
+                    }, function(err, response) {
+                        if (!err) {
+                            to = response.json.results[0].formatted_address;
+                            googleMapsClient.directions({
+                                origin: from,
+                                destination: to,
+                                mode: 'transit',
+                                language: 'fr',
+                                //mode: 'walking',
+                                //alternatives: true,
+                                transit_mode: ['bus', 'rail'],
+                                transit_routing_preference: 'fewer_transfers',
+                            }, function(err, response) {
+                                if (!err) {
+
+                                    res.json({
+                                        "speech": 'Avec les transports en commun tu en as pour ' + response.json.routes[0].legs[0].duration.text + ':)',
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
             });
 
             break;
