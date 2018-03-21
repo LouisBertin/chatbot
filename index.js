@@ -219,10 +219,11 @@ app.post('/action', function (req, res) {
             break;
         case "webhook.travel.route.from":
             var contexts = req.body.result.contexts;
+            var from = {};
 
             for (var i = 0, len = contexts.length; i < len; i++) {
                 if (contexts[i].name == 'webhooktravelroute-followup') {
-                    var from = {
+                    from = {
                         address: contexts[i].parameters['street-address-from']
                     }
                 }
@@ -230,7 +231,7 @@ app.post('/action', function (req, res) {
                     console.log(contexts[i].parameters.long)
                     console.log(contexts[i].parameters.lat)
 
-                    var from = {
+                    from = {
                         location: {lat: contexts[i].parameters.lat, lng: contexts[i].parameters.long}
                     }
                 }
