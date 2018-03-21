@@ -347,7 +347,7 @@ app.post('/action', function (req, res) {
                     var lat = response.json.results[0].geometry.location.lat
                     var lng = response.json.results[0].geometry.location.lng
 
-                    client.query('INSERT INTO users(id, address_code, address_txt, lat, lng) values($1, $2, $3, $4)',
+                    client.query('INSERT INTO users(id, address_code, address_txt, lat, lng) values($1, $2, $3, $4, $5)',
                         [parseInt(fbuserId), 'work' , formated_adress, lat, lng]);
                 }
             });
