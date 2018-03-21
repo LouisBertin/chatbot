@@ -21,7 +21,7 @@ app.get('/gmap', function (req, res) {
         address: '39 rue de montreuil Vincennes'
     }, function(err, response) {
         if (!err) {
-            res.json(response.json.results.geometry.location);
+            res.json(response.json.results);
         }
     });
 })
