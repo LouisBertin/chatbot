@@ -229,10 +229,9 @@ app.post('/action', function (req, res) {
                 if (contexts[i].name == 'facebook_location') {
                     console.log(contexts[i].parameters.long)
                     console.log(contexts[i].parameters.lat)
-                    console.log(googleMapsClient.LatLng(-34.397, 150.644))
 
                     var from = {
-                        location: googleMapsClient.LatLng(-34.397, 150.644)
+                        location: {lat: contexts[i].parameters.lat, lng: contexts[i].parameters.long}
                     }
                 }
             }
