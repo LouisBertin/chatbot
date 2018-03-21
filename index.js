@@ -208,8 +208,8 @@ app.post('/action', function (req, res) {
                                         if (steps[i].travel_mode == 'TRANSIT') {
                                             message += 'prend la ligne ' + steps[i].transit_details.line.short_name;
                                             message += ' de ' + steps[i].transit_details.departure_stop.name + ' jusque ' + steps[i].transit_details.arrival_stop.name;
-                                            message += " " + steps[i].html_instructions;
-                                            message += " (ca te prendra " + steps[i].duration.text + ") Après tu ";
+                                            message += ' (' + steps[i].html_instructions + ')';
+                                            message += ' ca te prendra ' + steps[i].duration.text + '. Après tu ';
                                         }
                                     }
 
