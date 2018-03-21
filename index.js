@@ -206,10 +206,10 @@ app.post('/action', function (req, res) {
                                     for (var i = 0, len = steps.length; i < len; i++) {
 
                                         if (steps[i].travel_mode == 'TRANSIT') {
-                                            message += 'Prend la ligne ' + steps[i].transit_details.line.short_name;
+                                            message += 'prend la ligne ' + steps[i].transit_details.line.short_name;
                                             message += ' de ' + steps[i].transit_details.departure_stop.name + ' jusque ' + steps[i].transit_details.arrival_stop.name;
-                                            message += "\n " + steps[i].html_instructions;
-                                            message += "\n (" + steps[i].duration.text + ")";
+                                            message += " " + steps[i].html_instructions;
+                                            message += " (ca te prendra " + steps[i].duration.text + ") Après tu ";
                                         }
                                     }
 
