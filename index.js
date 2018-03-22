@@ -301,8 +301,8 @@ app.post('/action', function (req, res) {
                                             if (i !== 0) {
                                                 message += ', ensuite ';
                                             }
-                                            message += 'prend la ligne ' + steps[i].transit_details.line.short_name;
-                                            message += ' de ' + steps[i].transit_details.departure_stop.name + ' jusque ' + steps[i].transit_details.arrival_stop.name;
+                                            message += 'prends la ligne ' + steps[i].transit_details.line.short_name;
+                                            message += ' de ' + steps[i].transit_details.departure_stop.name + ' jusqu\'à ' + steps[i].transit_details.arrival_stop.name;
                                             message += ' (' + steps[i].html_instructions + ')';
                                             message += ' ca te prendra ' + steps[i].duration.text + '. ';
                                         }
