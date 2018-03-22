@@ -292,6 +292,17 @@ app.post('/action', function (req, res) {
             });
 
             break;
+        case "webhook.user.data":
+            client.query('SELECT * FROM users', function(err, result) {
+                if(err) {
+                    return console.error('error running query', err);
+                }
+                console.log(result.rows[0]);
+                //output: Tue Jan 15 2013 19:12:47 GMT-600 (CST)
+                client.end();
+            });
+
+            break;
         case "webhook.user.data.workplace":
             // get workplace
             var workplace = req.body.result.parameters['street-address'];
