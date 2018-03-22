@@ -323,7 +323,7 @@ app.post('/action', function (req, res) {
                     if (currentFbId == val.id) {
                         console.log('it works')
                         res.json({
-                            "speech": "L'adresse de votre domicile est déjà renseignée",
+                            "speech": "L'adresse de votre entreprise est déjà renseignée",
                         });
                     }
                 }
