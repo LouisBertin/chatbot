@@ -396,6 +396,9 @@ app.post('/action', function (req, res) {
                                     var steps = response.json.routes[0].legs[0].steps;
                                     for (var i = 0, len = steps.length; i < len; i++) {
                                         if (steps[i].travel_mode == 'TRANSIT') {
+                                            console.log(steps[i].transit_details.line.vehicle.type);
+                                            console.log(steps[i].transit_details.line.vehicle.name);
+
                                             if (steps[i].transit_details.line.vehicle.type == 'SUBWAY') {
                                                 var metroLine = steps[i].transit_details.line.short_name;
                                                 var apiUrl = 'https://api-ratp.pierre-grimaud.fr/v3/traffic/metros/' + metroLine + '?_format=json';
