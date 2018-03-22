@@ -291,7 +291,7 @@ app.post('/action', function (req, res) {
                                                         "text": "Voir dans Gmaps"
                                                     }
                                                 ],
-                                                "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&zoom=16&markers=size:mid%7Ccolor:red%7C" + startStation.lat + "," + startStation.lng,
+                                                "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&zoom=16&markers=size:mid%7Ccolor:red%7C" + startStation.lng + "," + startStation.lat,
                                                 "platform": "facebook",
                                                 "title": "Station de départ",
                                                 "type": 1
