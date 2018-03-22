@@ -480,11 +480,11 @@ app.post('/action', function (req, res) {
             break;
         case "webhook.user.data.workplace":
             // get workplace
-            var workplace = req.body.result.parameters['street-address'];
+            var workplaceUser = req.body.result.parameters['street-address'];
 
             // geocoding
             googleMapsClient.geocode({
-                address: workplace
+                address: workplaceUser
             }, function(err, response) {
                 if (!err) {
                     let formated_adress = response.json.results[0].formatted_address
