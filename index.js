@@ -223,6 +223,7 @@ app.post('/action', function (req, res) {
                 client.query("SELECT * FROM users WHERE fb_id = '" + facebookId + "' AND address_code = '" + addressCode + "'", function(err, result) {
                     for (var i in result.rows) {
                         fromHome = result.rows[i];
+                        console.log(fromHome)
                     }
                 });
             }
