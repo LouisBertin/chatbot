@@ -600,7 +600,7 @@ app.post('/action', function (req, res) {
             console.log(displayCurrentWorkplaceAddress)
             console.log("SELECT * FROM users WHERE fb_id = " + displayCurrentWorkplaceAddress + " AND address_code = 'work'")
 
-            client.query("SELECT * FROM users WHERE fb_id = " + String(displayCurrentWorkplaceAddress) + " AND address_code = 'work'", function(err, result) {
+            client.query("SELECT * FROM users WHERE fb_id = '"+displayCurrentWorkplaceAddress+"' AND address_code = 'work'", function(err, result) {
                 for (var i in result.rows) {
                     val = result.rows[i];
 
