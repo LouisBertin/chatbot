@@ -198,6 +198,7 @@ app.post('/action', function (req, res) {
             var from = 'Place de Clichy';
             var to = '';
             var latLngFrom = {};
+            var startStation = {};
 
             for (var i = 0, len = contexts.length; i < len; i++) {
                 if (contexts[i].name == 'webhooktravelroute-followup') {
@@ -256,6 +257,14 @@ app.post('/action', function (req, res) {
                                             message += steps[i].html_instructions + ' (' + steps[i].duration.text + ') ';
                                         }
                                         if (steps[i].travel_mode == 'TRANSIT') {
+                                            if (typeof startStation.lat === 'undefined') {
+                                                startStation = {
+                                                    lat: steps[i].departure_stop.location.lat,
+                                                    long: steps[i].departure_stop.location.lng,
+                                                    text: steps[i].departure_stop.name,
+                                                }
+                                            }
+
                                             if (i !== 0) {
                                                 message += ', ensuite ';
                                             }
@@ -271,20 +280,21 @@ app.post('/action', function (req, res) {
                                     res.json({
                                         "messages": [
                                             {
+                                                "platform": "facebook",
+                                                "speech": message,
+                                                "type": 0
+                                            },
+                                            {
                                                 "buttons": [
                                                     {
                                                         "postback": "https://www.google.com/maps/search/?api=1&query=" + to,
-                                                        "text": "Voir mon lieu de travail"
+                                                        "text": "Voir dans Gmaps"
                                                     }
                                                 ],
                                                 "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&zoom=16&markers=size:mid%7Ccolor:red%7C"+latLngFrom.lat+","+latLngFrom.lng,
                                                 "platform": "facebook",
-                                                "title": "Cela correspond ?",
+                                                "title": "Station de départ",
                                                 "type": 1
-                                            },
-                                            {
-                                                "speech": message,
-                                                "type": 0
                                             }
                                         ]
                                     });
