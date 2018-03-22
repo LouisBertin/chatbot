@@ -4,7 +4,7 @@ var client = new pg.Client(connectionString);
 client.connect();
 
 function getUserAddress (id, addressCode, callback) {
-    client.query('SELECT * FROM users WHERE id = '+id+', address_code = ' + addressCode, callback);
+    client.query('SELECT * FROM users WHERE id = '+id+', address_code = ' + addressCode + "'", callback);
 }
 
 module.exports = {
