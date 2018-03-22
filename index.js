@@ -528,8 +528,11 @@ app.post('/action', function (req, res) {
 
             break
         case "webhook.user.home.place.yes":
-            var fbuserIdHome = req.body.originalRequest.data.sender.fb_id
+            var fbuserIdHome = req.body.originalRequest.data.sender.id
             var addressHome = req.body.result.contexts[0].parameters['street-address'];
+
+            console.log(fbuserIdHome)
+            console.log(addressHome)
 
             googleMapsClient.geocode({
                 address: addressHome
