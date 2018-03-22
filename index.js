@@ -424,8 +424,8 @@ app.post('/action', function (req, res) {
                     var lat = response.json.results[0].geometry.location.lat
                     var lng = response.json.results[0].geometry.location.lng
 
-                    client.query("UPDATE users SET address_txt = "+formated_adress+", lat = "+lat+", lng = "+lng+" WHERE id ="+parseInt(updateAddressFbuserId));
-                }
+                    client.query('UPDATE users SET address_txt=($1), lat=($2), lng=($3) WHERE id=($4)',
+                        [formated_adress, lat, lng, updateAddressFbuserId]);}
             });
 
             break;
