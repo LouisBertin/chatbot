@@ -245,7 +245,7 @@ app.post('/action', function (req, res) {
                                             if (i === 0) {
                                                 message += 'On va commencer par un peu de marche 👟 Il faut ';
                                             } else if (i === len - 1) {
-                                                message += ' On est presque arrivé courage 💪, il ne reste plus qu\'au ';
+                                                message += ' On est presque arrivé courage 💪, il ne reste plus qu\'à ';
                                             } else {
                                                 message += ' Il faut ';
                                             }
@@ -256,7 +256,7 @@ app.post('/action', function (req, res) {
                                                 message += ', ensuite ';
                                             }
                                             message += 'prends la ligne ' + steps[i].transit_details.line.short_name;
-                                            message += ' de ' + steps[i].transit_details.departure_stop.name + ' jusqu\'à ' + steps[i].transit_details.arrival_stop.name;
+                                            message += ' de ' + steps[i].transit_details.departure_stop.name + ' jusqu\'au ' + steps[i].transit_details.arrival_stop.name;
                                             message += ' (' + steps[i].html_instructions + ')';
                                             message += ' ca te prendra ' + steps[i].duration.text + '. ';
                                         }
