@@ -200,7 +200,9 @@ app.post('/action', function (req, res) {
             });
 
             break;
-        case "webhook.travel.route.from", "webhook.travel.route.home.from", "webhook.travel.route.entreprise.from":
+        case "webhook.travel.route.from":
+        case "webhook.travel.route.home.from":
+        case "webhook.travel.route.entreprise.from":
             console.log('match')
             console.log(req.body.result)
 
