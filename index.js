@@ -432,6 +432,10 @@ app.post('/action', function (req, res) {
         case "webhook.user.address.current":
             console.log(req.body)
 
+            res.json({
+                "speech": "Voici votre adresse :",
+            });
+
             break;
     }
 })
