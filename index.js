@@ -277,10 +277,15 @@ app.post('/action', function (req, res) {
                                 transit_mode: ['rail'],
                                 transit_routing_preference: 'fewer_transfers',
                             }, function(err, response) {
+
+                                console.log(to);
+                                console.log(latLngFrom);
+                                console.log(err);
+                                console.log(response.json.routes[0]);
+
                                 if (!err) {
                                     var message = '';
                                     var steps = response.json.routes[0].legs[0].steps;
-                                    console.log(response.json.routes[0]);
                                     for (var i = 0, len = steps.length; i < len; i++) {
 
                                         if (steps[i].travel_mode == 'TRANSIT') {
