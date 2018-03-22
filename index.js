@@ -459,9 +459,9 @@ app.post('/action', function (req, res) {
                     val = result.rows[i];
 
                     console.log(currentFbIdHome)
-                    console.log(val.id)
+                    console.log(val.fb_id)
 
-                    if (currentFbIdHome == val.id) {
+                    if (currentFbIdHome == val.fb_id) {
                         res.json({
                             "speech": "L'adresse de votre domicile est déjà renseignée",
                         });
