@@ -321,12 +321,17 @@ app.post('/action', function (req, res) {
 
             break;
         case "webhook.user.data":
+            var currentFbId = req.body
+
             client.query('SELECT id FROM users', function(err, result) {
                 if(err) {
                     return console.error('error running query', err);
                 }
                 // retrieve data : result.rows
-                console.log(result.rows);
+                for (var i in result.rows) {
+                    val = result.rows[i];
+                    console.log(val);
+                }
                 client.end();
             });
 
