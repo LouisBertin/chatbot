@@ -244,7 +244,7 @@ app.post('/action', function (req, res) {
                 }
             }
 
-            if (latLngFrom.lat.length <= 0) {
+            if (typeof latLngFrom.lat === 'undefined') {
                 from = req.body.result.parameters['street-address-from'];
             }
 
@@ -252,7 +252,7 @@ app.post('/action', function (req, res) {
                 address: from
             }, function(err, response) {
                 if (!err) {
-                    if (latLngFrom.lat.length <= 0) {
+                    if (typeof latLngFrom.lat === 'undefined') {
                         latLngFrom = {
                             lat: response.json.results[0].geometry.location.lat,
                             lng: response.json.results[0].geometry.location.lng
