@@ -277,6 +277,9 @@ app.post('/action', function (req, res) {
 
                                     message += 'Voila, tu es arrivé ! :)🚩';
 
+                                    console.log(startStation.lat);
+                                    console.log(startStation.lng);
+
                                     res.json({
                                         "messages": [
                                             {
@@ -291,7 +294,7 @@ app.post('/action', function (req, res) {
                                                         "text": "Voir dans Gmaps"
                                                     }
                                                 ],
-                                                "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&zoom=16&markers=size:mid%7Ccolor:red%7C" + startStation.lng + "," + startStation.lat,
+                                                "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&zoom=16&markers=size:mid%7Ccolor:red%7C" + startStation.lat + "," + startStation.lng,
                                                 "platform": "facebook",
                                                 "title": "Station de départ",
                                                 "type": 1
