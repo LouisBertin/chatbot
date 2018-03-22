@@ -500,7 +500,7 @@ app.post('/action', function (req, res) {
                     var lng = response.json.results[0].geometry.location.lng
 
                     client.query('INSERT INTO users(id, address_code, address_txt, lat, lng) values($1, $2, $3, $4, $5)',
-                        [parseInt(fbuserId), 'home', formated_adress, lat, lng]);
+                        [parseInt(fbuserIdHome), 'home', formated_adress, lat, lng]);
                 }
             });
 
