@@ -90,6 +90,10 @@ app.get('/', function (req, res) {
 
 app.get('/gmap', function (req, res) {
     helper.getUserAddress(1411203568983927, 'work', function(err, result) {
+        if(err) {
+            return res.status(500).end()
+        }
+
         console.log(result.rows)
     });
 })
@@ -408,6 +412,28 @@ app.post('/action', function (req, res) {
                         "speech": "Voici votre adresse : " + val.address_txt,
                     });
                 }
+            });
+
+            break;
+        case "webhook.user.home":
+            var currentFbIdHome = parseInt(req.body.originalRequest.data.sender.id)
+
+            client.query("SELECT id FROM users WHERE address_code = 'home'", function(err, result) {
+                // retrieve data : result.rows
+                for (var i in result.rows) {
+                    val = result.rows[i];
+
+                    if (currentFbIdHome == val.id) {
+                        res.json({
+                            "speech": "L'adresse de votre entreprise est déjà renseignée",
+                        });
+                        return false;
+                    }
+                }
+
+                res.json({
+                    "speech": "Où habitez-vous ?",
+                });
             });
 
             break;
