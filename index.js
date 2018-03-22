@@ -321,7 +321,7 @@ app.post('/action', function (req, res) {
 
             break;
         case "webhook.user.data":
-            console.log(req.body.originalRequest.data.sender.id)
+            var currentFbId = parseInt(req.body.originalRequest.data.sender.id)
 
             client.query('SELECT id FROM users', function(err, result) {
                 if(err) {
@@ -330,7 +330,12 @@ app.post('/action', function (req, res) {
                 // retrieve data : result.rows
                 for (var i in result.rows) {
                     val = result.rows[i];
-                    console.log(val);
+
+                    if (currentFbId == val) {
+                        res.json({
+                            "speech": "L'adresse de votre domicile est déjà renseignée",
+                        });
+                    }
                 }
                 client.end();
             });
