@@ -436,6 +436,7 @@ app.post('/action', function (req, res) {
                 for (var i in result.rows) {
                     val = result.rows[i];
                     console.log(val)
+                    console.log(val.address_txt)
                     res.json({
                         "speech": "Voici votre adresse :",
                     });
