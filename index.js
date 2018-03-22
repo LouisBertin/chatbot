@@ -406,6 +406,8 @@ app.post('/action', function (req, res) {
                                                         res.json({
                                                             "speech": issuesMessage,
                                                         });
+
+                                                        return false;
                                                     }
                                                 }).catch(function(error) {
                                                     issuesMessage = error;
@@ -414,6 +416,7 @@ app.post('/action', function (req, res) {
                                             if (steps[i].transit_details.line.vehicle.name == 'RER') {
                                                 var rerLine = steps[i].transit_details.line.short_name.replace('RER ', '');
                                                 var apiUrl = 'https://api-ratp.pierre-grimaud.fr/v3/traffic/rers/' + rerLine + '?_format=json';
+                                                console.log('match rer')
                                                 console.log(rerLine)
 
                                                 axios.get(apiUrl).then(function(response) {
@@ -423,17 +426,21 @@ app.post('/action', function (req, res) {
                                                         res.json({
                                                             "speech": issuesMessage,
                                                         });
+
+                                                        return false;
                                                     }
                                                 }).catch(function(error) {
                                                     issuesMessage = error;
                                                 });
                                             }
                                         }
-                                    }
 
-                                    // res.json({
-                                    //     "speech": 'Tout va bien :) tu peux partir tranquille 👍',
-                                    // });
+                                        if (i === len -1) {
+                                            res.json({
+                                                "speech": 'Tout va bien :) tu peux partir tranquille 👍',
+                                            });
+                                        }
+                                    }
                                 }
                             });
                         }
