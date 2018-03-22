@@ -322,12 +322,12 @@ app.post('/action', function (req, res) {
 
             break;
         case "webhook.user.data":
-            client.query('SELECT * FROM users', function(err, result) {
+            client.query('SELECT id FROM users', function(err, result) {
                 if(err) {
                     return console.error('error running query', err);
                 }
-                console.log(result.rows[0]);
-                //output: Tue Jan 15 2013 19:12:47 GMT-600 (CST)
+                // retrieve data : result.rows
+                console.log(result.rows);
                 client.end();
             });
 
