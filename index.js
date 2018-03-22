@@ -205,6 +205,10 @@ app.post('/action', function (req, res) {
         case "webhook.travel.route.home.from":
             addressCode = 'home';
         case "webhook.travel.route.work.from":
+            console.log('work');
+            console.log(addressCode);
+            console.log(addressCode.length);
+
             if (addressCode.length <= 0) {
                 addressCode = 'work';
             }
