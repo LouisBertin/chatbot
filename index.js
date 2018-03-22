@@ -245,9 +245,10 @@ app.post('/action', function (req, res) {
                         lat: contexts[i].parameters.lat,
                         lng: contexts[i].parameters.long
                     }
+                } else {
+                    from = req.body.result.parameters['street-address-from'];
                 }
             }
-            from = req.body.result.parameters['street-address-from'];
 
             console.log(from)
             console.log(to)
