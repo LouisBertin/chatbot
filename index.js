@@ -257,7 +257,10 @@ app.post('/action', function (req, res) {
                                             message += steps[i].html_instructions + ' (' + steps[i].duration.text + ') ';
                                         }
                                         if (steps[i].travel_mode == 'TRANSIT') {
+                                            console.log('travel loop')
+
                                             if (typeof startStation.lat === 'undefined') {
+                                                console.log('define start station')
                                                 startStation = {
                                                     lat: steps[i].departure_stop.location.lat,
                                                     long: steps[i].departure_stop.location.lng,
@@ -276,6 +279,8 @@ app.post('/action', function (req, res) {
                                     }
 
                                     message += 'Voila, tu es arrivé ! :)🚩';
+
+                                    console.log(startStation)
 
                                     res.json({
                                         "messages": [
