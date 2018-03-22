@@ -570,6 +570,23 @@ app.post('/action', function (req, res) {
             });
 
             break;
+        case "webhook.user.update.home.custom.yes":
+            var updateHomeFbuserId = req.body.originalRequest.data.sender.id
+            var updateHomeFbuser = req.body.result.contexts[0].parameters['street-address'];
+
+            googleMapsClient.geocode({
+                address: updateHomeFbuser
+            }, function(err, response) {
+                if (!err) {
+                    var formated_adress = response.json.results[0].formatted_address
+                    var lat = response.json.results[0].geometry.location.lat
+                    var lng = response.json.results[0].geometry.location.lng
+
+                    client.query('UPDATE users SET address_txt=($1), lat=($2), lng=($3) WHERE fb_id=($4) AND address_code=($5)',
+                        [formated_adress, lat, lng, updateHomeFbuserId, 'home']);}
+            });
+
+            break;
 
     }
 })
