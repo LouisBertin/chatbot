@@ -318,6 +318,7 @@ app.post('/action', function (req, res) {
                 for (var i in result.rows) {
                     val = result.rows[i];
                     console.log(val.id)
+                    console.log('current : ' + currentFbId)
 
                     if (currentFbId === val) {
                         console.log('it works')
