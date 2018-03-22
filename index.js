@@ -79,56 +79,9 @@ app.get('/', function (req, res) {
 })
 
 app.get('/gmap', function (req, res) {
-    var test = {
-        "id": "fb43d312-a594-4af5-be91-e65a9b8a742e",
-        "timestamp": "2018-03-21T15:59:12.865Z",
-        "lang": "fr",
-        "result": {
-            "source": "agent",
-            "resolvedQuery": "oui",
-            "action": "webhookuserdata.webhookuserdata-custom.webhookuserdataworkplace-yes",
-            "actionIncomplete": false,
-            "parameters": {},
-            "contexts": [
-                {
-                    "name": "webhookuserdataworkplace-followup",
-                    "parameters": {
-                        "street-address": "39 bis rue de montreuil",
-                        "street-address.original": "39 bis rue de montreuil"
-                    },
-                    "lifespan": 1
-                }
-            ],
-            "metadata": {
-                "intentId": "8c7c8da7-8c42-466c-b7f4-b465d831a6d5",
-                "webhookUsed": "true",
-                "webhookForSlotFillingUsed": "false",
-                "webhookResponseTime": 173,
-                "intentName": "webhook.user.data.workplace.yes"
-            },
-            "fulfillment": {
-                "speech": "",
-                "messages": [
-                    {
-                        "type": 0,
-                        "platform": "facebook",
-                        "speech": "Super! Cette adresse a été enregistrée :)"
-                    }
-                ]
-            },
-            "score": 1
-        },
-        "status": {
-            "code": 206,
-            "errorType": "partial_content",
-            "errorDetails": "Webhook call failed. Error: 500 Internal Server Error",
-            "webhookTimedOut": false
-        },
-        "sessionId": "d0c43a9b-89a4-4147-aa28-0502c90a604d",
-        "alternativeResultsFromKnowledgeService": {}
-    }
+    var data = getUserAddress(1411203568983927, 'work')
 
-    res.json(test)
+    res.json(data)
 })
 
 app.post('/action', function (req, res) {
