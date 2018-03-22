@@ -261,7 +261,7 @@ app.post('/action', function (req, res) {
 
                                             if (typeof startStation.lat === 'undefined') {
                                                 console.log('define start station')
-                                                console.log(steps[i].departure_stop)
+                                                console.log(steps[i])
                                                 startStation = {
                                                     lat: steps[i].departure_stop.location.lat,
                                                     long: steps[i].departure_stop.location.lng,
