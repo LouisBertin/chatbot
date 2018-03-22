@@ -265,18 +265,17 @@ app.post('/action', function (req, res) {
                                     message += 'Voila, tu es arrivé ! :)🚩';
 
                                     res.json({
-                                        "speech": message,
                                         "messages": [
                                             {
-                                                // "buttons": [
-                                                //     {
-                                                //         "postback": "https://www.google.com/maps/search/?api=1&query=" + formated_adress,
-                                                //         "text": "Station de départ"
-                                                //     }
-                                                // ],
-                                                "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&zoom=16&markers=size:mid%7Ccolor:red%7C" + latLngFrom.lat + "," + latLngFrom.lng,
+                                                "buttons": [
+                                                    {
+                                                        "postback": "https://www.google.com/maps/search/?api=1&query=" + to,
+                                                        "text": "Voir mon lieu de travail"
+                                                    }
+                                                ],
+                                                "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&zoom=16&markers=size:mid%7Ccolor:red%7C"+latLngFrom.lat+","+latLngFrom.lng,
                                                 "platform": "facebook",
-                                                "title": 'test',
+                                                "title": "Cela correspond ?",
                                                 "type": 1
                                             }
                                         ]
