@@ -257,18 +257,12 @@ app.post('/action', function (req, res) {
                                             message += steps[i].html_instructions + ' (' + steps[i].duration.text + ') ';
                                         }
                                         if (steps[i].travel_mode == 'TRANSIT') {
-                                            console.log('travel loop')
-
                                             if (typeof startStation.lat === 'undefined') {
-                                                console.log('define start station')
-                                                console.log(steps[i].departure_stop)
                                                 startStation = {
-                                                    lat: steps[i].departure_stop.location.lat,
-                                                    long: steps[i].departure_stop.location.lng,
-                                                    text: steps[i].departure_stop.name,
+                                                    lat: steps[i].transit_details.departure_stop.location.lat,
+                                                    long: steps[i].transit_details.departure_stop.location.lng,
+                                                    text: steps[i].transit_details.departure_stop.name,
                                                 };
-                                                console.log(startStation)
-                                                console.log('after define start station')
                                             }
 
                                             if (i !== 0) {
@@ -283,8 +277,6 @@ app.post('/action', function (req, res) {
 
                                     message += 'Voila, tu es arrivé ! :)🚩';
 
-                                    console.log(startStation)
-
                                     res.json({
                                         "messages": [
                                             {
@@ -295,11 +287,11 @@ app.post('/action', function (req, res) {
                                             {
                                                 "buttons": [
                                                     {
-                                                        "postback": "https://www.google.com/maps/search/?api=1&query=" + to,
+                                                        "postback": "https://www.google.com/maps/search/?api=1&query=" + startStation.text,
                                                         "text": "Voir dans Gmaps"
                                                     }
                                                 ],
-                                                "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&zoom=16&markers=size:mid%7Ccolor:red%7C"+latLngFrom.lat+","+latLngFrom.lng,
+                                                "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&zoom=16&markers=size:mid%7Ccolor:red%7C" + startStation.lat + "," + startStation.lng,
                                                 "platform": "facebook",
                                                 "title": "Station de départ",
                                                 "type": 1
