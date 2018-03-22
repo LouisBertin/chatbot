@@ -271,6 +271,11 @@ app.post('/action', function (req, res) {
                                     res.json({
                                         "messages": [
                                             {
+                                                "platform": "facebook",
+                                                "speech": message,
+                                                "type": 0
+                                            },
+                                            {
                                                 "buttons": [
                                                     {
                                                         "postback": "https://www.google.com/maps/search/?api=1&query=" + to,
@@ -281,10 +286,6 @@ app.post('/action', function (req, res) {
                                                 "platform": "facebook",
                                                 "title": "Cela correspond ?",
                                                 "type": 1
-                                            },
-                                            {
-                                                "speech": message,
-                                                "type": 0
                                             }
                                         ]
                                     });
