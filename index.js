@@ -443,9 +443,9 @@ app.post('/action', function (req, res) {
 
             break;
         case "webhook.user.home":
-            var currentFbIdHome = parseInt(req.body.originalRequest.data.sender.id)
+            var currentFbIdHome = req.body.originalRequest.data.sender.id
 
-            client.query("SELECT id FROM users WHERE address_code = 'home'", function(err, result) {
+            client.query("SELECT fb_id FROM users WHERE address_code = 'home'", function(err, result) {
                 // retrieve data : result.rows
                 for (var i in result.rows) {
                     val = result.rows[i];
