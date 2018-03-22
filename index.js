@@ -391,15 +391,10 @@ app.post('/action', function (req, res) {
                                 transit_routing_preference: 'fewer_transfers',
                             }, function(err, response) {
                                 if (!err) {
-                                    var message = '';
                                     var issuesMessage = '';
                                     var steps = response.json.routes[0].legs[0].steps;
                                     for (var i = 0, len = steps.length; i < len; i++) {
                                         if (steps[i].travel_mode == 'TRANSIT') {
-                                            console.log(steps[i].transit_details.line.vehicle.type);
-                                            console.log(steps[i].transit_details.line.vehicle.name);
-                                            console.log(steps[i].transit_details.line.short_name);
-
                                             if (steps[i].transit_details.line.vehicle.type == 'SUBWAY') {
                                                 var metroLine = steps[i].transit_details.line.short_name;
                                                 var apiUrl = 'https://api-ratp.pierre-grimaud.fr/v3/traffic/metros/' + metroLine + '?_format=json';
@@ -420,8 +415,6 @@ app.post('/action', function (req, res) {
                                             if (steps[i].transit_details.line.vehicle.name == 'RER') {
                                                 var rerLine = steps[i].transit_details.line.short_name.replace('RER ', '');
                                                 var apiUrl = 'https://api-ratp.pierre-grimaud.fr/v3/traffic/rers/' + rerLine + '?_format=json';
-                                                console.log('match rer')
-                                                console.log(rerLine)
 
                                                 axios.get(apiUrl).then(function(response) {
                                                     console.log(response.data.result)
@@ -441,12 +434,6 @@ app.post('/action', function (req, res) {
                                                 });
                                             }
                                         }
-
-                                        // if (i === len -1) {
-                                        //     res.json({
-                                        //         "speech": 'Tout va bien :) tu peux partir tranquille 👍',
-                                        //     });
-                                        // }
                                     }
                                 }
                             });
