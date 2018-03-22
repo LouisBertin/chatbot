@@ -597,10 +597,21 @@ app.post('/action', function (req, res) {
         case "webhook.user.address.current":
             var displayCurrentWorkplaceAddress = req.body.originalRequest.data.sender.id
 
-            console.log(displayCurrentWorkplaceAddress)
-            console.log("SELECT * FROM users WHERE fb_id = " + displayCurrentWorkplaceAddress + " AND address_code = 'work'")
-
             client.query("SELECT * FROM users WHERE fb_id = '"+displayCurrentWorkplaceAddress+"' AND address_code = 'work'", function(err, result) {
+                for (var i in result.rows) {
+                    val = result.rows[i];
+
+                    res.json({
+                        "speech": "Voici ton adresse : " + val.address_txt,
+                    });
+                }
+            });
+
+            break;
+        case "webhook.user.home.current":
+            var displayCurrentHomeAddress = req.body.originalRequest.data.sender.id
+
+            client.query("SELECT * FROM users WHERE fb_id = '"+displayCurrentHomeAddress+"' AND address_code = 'home'", function(err, result) {
                 for (var i in result.rows) {
                     val = result.rows[i];
 
@@ -670,9 +681,6 @@ app.post('/action', function (req, res) {
             var fbuserIdHome = req.body.originalRequest.data.sender.id
             var addressHome = req.body.result.contexts[0].parameters['street-address'];
 
-            console.log(fbuserIdHome)
-            console.log(addressHome)
-
             googleMapsClient.geocode({
                 address: addressHome
             }, function(err, response) {
@@ -680,8 +688,6 @@ app.post('/action', function (req, res) {
                     var formated_adress = response.json.results[0].formatted_address
                     var lat = response.json.results[0].geometry.location.lat
                     var lng = response.json.results[0].geometry.location.lng
-
-                    console.log('hello world')
 
                     client.query('INSERT INTO users(fb_id, address_code, address_txt, lat, lng) values($1, $2, $3, $4, $5)',
                         [fbuserIdHome, 'home', formated_adress, lat, lng]);
