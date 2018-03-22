@@ -320,7 +320,7 @@ app.post('/action', function (req, res) {
                     console.log(val.id)
                     console.log('current : ' + currentFbId)
 
-                    if (currentFbId === val) {
+                    if (currentFbId === val.id) {
                         console.log('it works')
                         res.json({
                             "speech": "L'adresse de votre domicile est déjà renseignée",
