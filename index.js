@@ -442,11 +442,11 @@ app.post('/action', function (req, res) {
                                             }
                                         }
 
-                                        if (i === len -1) {
-                                            res.json({
-                                                "speech": 'Tout va bien :) tu peux partir tranquille 👍',
-                                            });
-                                        }
+                                        // if (i === len -1) {
+                                        //     res.json({
+                                        //         "speech": 'Tout va bien :) tu peux partir tranquille 👍',
+                                        //     });
+                                        // }
                                     }
                                 }
                             });
