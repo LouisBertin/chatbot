@@ -266,9 +266,6 @@ app.post('/action', function (req, res) {
 
                                     res.json({
                                         "speech": message,
-                                    });
-
-                                    res.json({
                                         "messages": [
                                             {
                                                 // "buttons": [
