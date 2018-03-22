@@ -422,6 +422,9 @@ app.post('/action', function (req, res) {
                                                 axios.get(apiUrl).then(function(response) {
                                                     console.log(response.data.result)
                                                     if (response.data.result.slug === 'alerte') {
+                                                        console.log('param')
+                                                        console.log(rerLine)
+
                                                         issuesMessage = 'Oula on a des soucis avec le RER sur la ligne ' + rerLine + ' : ' + response.data.result.message + ' ⚠🚇';
                                                         res.json({
                                                             "speech": issuesMessage,
