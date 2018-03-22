@@ -344,7 +344,6 @@ app.post('/action', function (req, res) {
                         });
                     }
                 }
-                client.end();
             });
 
             break;
