@@ -277,6 +277,9 @@ app.post('/action', function (req, res) {
 
                                     message += 'Voila, tu es arrivé ! :)🚩';
 
+                                    console.log(startStation.lat);
+                                    console.log(startStation.lng);
+
                                     res.json({
                                         "messages": [
                                             {
