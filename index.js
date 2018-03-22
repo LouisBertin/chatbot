@@ -283,9 +283,8 @@ app.post('/action', function (req, res) {
                                                 "type": 1
                                             },
                                             {
-                                                "text": message,
-                                                "platform": "facebook",
-                                                "type": 1
+                                                "speech": message,
+                                                "type": 0
                                             }
                                         ]
                                     });
