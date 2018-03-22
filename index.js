@@ -317,16 +317,17 @@ app.post('/action', function (req, res) {
                 // retrieve data : result.rows
                 for (var i in result.rows) {
                     val = result.rows[i];
-                    console.log(val.id)
-                    console.log('current : ' + currentFbId)
 
                     if (currentFbId == val.id) {
-                        console.log('it works')
                         res.json({
                             "speech": "L'adresse de votre entreprise est déjà renseignée",
                         });
                     }
                 }
+
+                res.json({
+                    "speech": "Où travaillez-vous ?",
+                });
             });
 
             break;
