@@ -429,6 +429,10 @@ app.post('/action', function (req, res) {
             });
 
             break;
+        case "webhook.user.address.current":
+            console.log(req.body)
+
+            break;
     }
 })
 
