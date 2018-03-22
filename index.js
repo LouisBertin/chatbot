@@ -283,7 +283,8 @@ app.post('/action', function (req, res) {
                                                 "type": 1
                                             },
                                             {
-                                                "text": message,
+                                                "speech": message,
+                                                "type": 0
                                             }
                                         ]
                                     });
