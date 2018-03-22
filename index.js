@@ -430,11 +430,16 @@ app.post('/action', function (req, res) {
 
             break;
         case "webhook.user.address.current":
-            console.log(req.body)
+            var displayCurrentWorkplaceAddress = req.body.originalRequest.data.sender.id
 
-            res.json({
-                "speech": "Voici votre adresse :",
-            });
+            client.query('SELECT * FROM users WHERE id = ' + displayCurrentWorkplaceAddress, function(err, result) {
+                for (var i in result.rows) {
+                    val = result.rows[i];
+                    console.log(val)
+                    res.json({
+                        "speech": "Voici votre adresse :",
+                    });
+            }
 
             break;
     }
