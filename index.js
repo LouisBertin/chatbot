@@ -434,7 +434,7 @@ app.post('/action', function (req, res) {
         case "webhook.user.address.current":
             var displayCurrentWorkplaceAddress = req.body.originalRequest.data.sender.id
 
-            client.query('SELECT * FROM users WHERE id = ' + displayCurrentWorkplaceAddress, function(err, result) {
+            client.query("SELECT * FROM users WHERE id = " + displayCurrentWorkplaceAddress + "AND address_code = 'work'", function(err, result) {
                 for (var i in result.rows) {
                     val = result.rows[i];
 
