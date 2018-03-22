@@ -532,6 +532,8 @@ app.post('/action', function (req, res) {
                     var lat = response.json.results[0].geometry.location.lat
                     var lng = response.json.results[0].geometry.location.lng
 
+                    console.log('hello world')
+
                     client.query('INSERT INTO users(fb_id, address_code, address_txt, lat, lng) values($1, $2, $3, $4, $5)',
                         [fbuserIdHome, 'home', formated_adress, lat, lng]);
                 }
