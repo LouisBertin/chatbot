@@ -316,7 +316,7 @@ app.post('/action', function (req, res) {
                 }
                 // retrieve data : result.rows
                 for (var i in result.rows) {
-                    val = result.rows[i];
+                    val = result.rows[i].id;
 
                     if (currentFbId === val) {
                         console.log('it works')
