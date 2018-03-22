@@ -408,6 +408,14 @@ app.post('/action', function (req, res) {
 
                                                         return false;
                                                     }
+                                                    if (response.data.result.slug === 'normal_trav') {
+                                                        issuesMessage = 'Fais attention aux horaires des travaux du métro sur la ligne ' + metroLine + ' : ' + response.data.result.message + ' 🚧🚇';
+                                                        res.json({
+                                                            "speech": issuesMessage,
+                                                        });
+
+                                                        return false;
+                                                    }
                                                 }).catch(function(error) {
                                                     issuesMessage = error;
                                                 });
@@ -419,10 +427,15 @@ app.post('/action', function (req, res) {
                                                 axios.get(apiUrl).then(function(response) {
                                                     console.log(response.data.result)
                                                     if (response.data.result.slug === 'alerte') {
-                                                        console.log('param')
-                                                        console.log(rerLine)
-
                                                         issuesMessage = 'Oula on a des soucis avec le RER sur la ligne ' + rerLine + ' : ' + response.data.result.message + ' ⚠🚇';
+                                                        res.json({
+                                                            "speech": issuesMessage,
+                                                        });
+
+                                                        return false;
+                                                    }
+                                                    if (response.data.result.slug === 'normal_trav') {
+                                                        issuesMessage = 'Fais attention aux horaires des travaux de la ligne ' + rerLine + ' : ' + response.data.result.message + ' 🚧🚇';
                                                         res.json({
                                                             "speech": issuesMessage,
                                                         });
