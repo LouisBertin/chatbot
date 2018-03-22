@@ -233,11 +233,12 @@ app.post('/action', function (req, res) {
         case "webhook.travel.route.from":
             var contexts = req.body.result.contexts;
             var from = 'Place de Clichy';
+            var to = '';
             var latLngFrom = {};
 
             for (var i = 0, len = contexts.length; i < len; i++) {
                 if (contexts[i].name == 'webhooktravelroute-followup') {
-                    var to = contexts[i].parameters['street-address-to'];
+                   to = contexts[i].parameters['street-address-to'];
                 }
                 if (contexts[i].name == 'facebook_location') {
                     latLngFrom = {
@@ -247,6 +248,9 @@ app.post('/action', function (req, res) {
                 }
             }
             from = req.body.result.parameters['street-address-from'];
+
+            console.log(from)
+            console.log(to)
 
             googleMapsClient.geocode({
                 address: from
