@@ -311,14 +311,12 @@ app.post('/action', function (req, res) {
             var currentFbId = parseInt(req.body.originalRequest.data.sender.id)
 
             client.query('SELECT id FROM users', function(err, result) {
-                if(err) {
-                    return console.error('error running query', err);
-                }
                 // retrieve data : result.rows
                 for (var i in result.rows) {
                     val = result.rows[i];
 
                     if (currentFbId == val.id) {
+                        console.log('it works')
                         res.json({
                             "speech": "L'adresse de votre entreprise est déjà renseignée",
                         });
