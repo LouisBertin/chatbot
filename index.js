@@ -106,6 +106,8 @@ app.get('/gmap', function (req, res) {
 })
 
 app.post('/action', function (req, res) {
+    var addressCode = '';
+
     switch (req.body.result.metadata.intentName) {
         case "webhook.metro.status":
             var metroLine = req.body.result.parameters['metro-line-number'];
@@ -200,18 +202,30 @@ app.post('/action', function (req, res) {
             });
 
             break;
-        case "webhook.travel.route.from":
         case "webhook.travel.route.home.from":
+            addressCode = 'home';
         case "webhook.travel.route.entreprise.from":
-            console.log('match')
-            console.log(req.body.result)
+            if (addressCode.length <= 0) {
+                addressCode = 'work';
+            }
+        case "webhook.travel.route.from":
 
+            var facebookId = req.body.originalRequest.data.sender.id;
             var contexts = req.body.result.contexts;
             var from = 'Place de Clichy';
             var to = '';
             var latLngFrom = {};
             var latLngTo = {};
             var startStation = {};
+            var fromHome = {};
+
+            if (addressCode.length > 0) {
+                client.query("SELECT * FROM users WHERE fb_id = '" + facebookId + "' AND address_code = '" + addressCode + "'", function(err, result) {
+                    for (var i in result.rows) {
+                        fromHome = result.rows[i];
+                    }
+                });
+            }
 
             for (var i = 0, len = contexts.length; i < len; i++) {
                 if (contexts[i].name == 'webhooktravelroute-followup') {
@@ -233,10 +247,15 @@ app.post('/action', function (req, res) {
                 address: from
             }, function(err, response) {
                 if (!err) {
-                    if (typeof latLngFrom.lat === 'undefined') {
+                    if (typeof latLngFrom.lat === 'undefined' && typeof fromHome.address_text === 'undefined') {
                         latLngFrom = {
                             lat: response.json.results[0].geometry.location.lat,
                             lng: response.json.results[0].geometry.location.lng
+                        }
+                    } else if (typeof fromHome.address_text !== 'undefined') {
+                        latLngFrom = {
+                            lat: fromHome.lat,
+                            lng: fromHome.lng
                         }
                     }
 
