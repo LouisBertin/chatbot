@@ -271,6 +271,9 @@ app.post('/action', function (req, res) {
                                     res.json({
                                         "messages": [
                                             {
+                                                "text": message,
+                                            },
+                                            {
                                                 "buttons": [
                                                     {
                                                         "postback": "https://www.google.com/maps/search/?api=1&query=" + to,
@@ -280,7 +283,6 @@ app.post('/action', function (req, res) {
                                                 "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&zoom=16&markers=size:mid%7Ccolor:red%7C"+latLngFrom.lat+","+latLngFrom.lng,
                                                 "platform": "facebook",
                                                 "title": "Cela correspond ?",
-                                                "text": message,
                                                 "type": 1
                                             }
                                         ]
