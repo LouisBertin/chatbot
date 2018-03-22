@@ -398,6 +398,7 @@ app.post('/action', function (req, res) {
                                         if (steps[i].travel_mode == 'TRANSIT') {
                                             console.log(steps[i].transit_details.line.vehicle.type);
                                             console.log(steps[i].transit_details.line.vehicle.name);
+                                            console.log(steps[i].transit_details.line.short_name);
 
                                             if (steps[i].transit_details.line.vehicle.type == 'SUBWAY') {
                                                 var metroLine = steps[i].transit_details.line.short_name;
