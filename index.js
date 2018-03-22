@@ -260,7 +260,7 @@ app.post('/action', function (req, res) {
                                                 message += ', ensuite ';
                                             }
                                             message += 'prends la ligne ' + steps[i].transit_details.line.short_name;
-                                            message += ' de ' + steps[i].transit_details.departure_stop.name + ' jusqu\'au ' + steps[i].transit_details.arrival_stop.name;
+                                            message += ' de ' + steps[i].transit_details.departure_stop.name + ' jusqu\'à ' + steps[i].transit_details.arrival_stop.name;
                                             message += ' (' + steps[i].html_instructions + ')';
                                             message += ' ca te prendra ' + steps[i].duration.text + '. ';
                                         }
@@ -269,7 +269,21 @@ app.post('/action', function (req, res) {
                                     message += 'Voila, tu es arrivé ! :)🚩';
 
                                     res.json({
-                                        "speech": message,
+                                        "messages": [
+                                            {
+                                                "buttons": [
+                                                    {
+                                                        "postback": "https://www.google.com/maps/search/?api=1&query=" + to,
+                                                        "text": "Voir mon lieu de travail"
+                                                    }
+                                                ],
+                                                "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&zoom=16&markers=size:mid%7Ccolor:red%7C"+latLngFrom.lat+","+latLngFrom.lng,
+                                                "platform": "facebook",
+                                                "title": "Cela correspond ?",
+                                                "text": message,
+                                                "type": 1
+                                            }
+                                        ]
                                     });
                                 }
                             });
@@ -375,7 +389,7 @@ app.post('/action', function (req, res) {
                                 ],
                                 "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&zoom=16&markers=size:mid%7Ccolor:red%7C"+lat+","+lng,
                                 "platform": "facebook",
-                                "title": "Cela correspond ?",
+                                "title": "C'est ici ?",
                                 "type": 1
                             }
                         ]
@@ -409,7 +423,7 @@ app.post('/action', function (req, res) {
                     val = result.rows[i];
 
                     res.json({
-                        "speech": "Voici votre adresse : " + val.address_txt,
+                        "speech": "Voici ton adresse : " + val.address_txt,
                     });
                 }
             });
