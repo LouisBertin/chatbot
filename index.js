@@ -424,8 +424,10 @@ app.post('/action', function (req, res) {
                                             if (steps[i].transit_details.line.vehicle.name == 'RER') {
                                                 var rerLine = steps[i].transit_details.line.short_name.replace('RER ', '');
                                                 var apiUrl = 'https://api-ratp.pierre-grimaud.fr/v3/traffic/rers/' + rerLine + '?_format=json';
+                                                console.log(rerLine)
 
                                                 axios.get(apiUrl).then(function(response) {
+                                                    console.log(response.data.result)
                                                     if (response.data.result.slug === 'alerte') {
                                                         issuesMessage = 'Oula on a des soucis avec le RER sur la ligne ' + rerLine + ' : ' + response.data.result.message + ' ⚠🚇';
                                                         res.json({
