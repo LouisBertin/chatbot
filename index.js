@@ -261,11 +261,14 @@ app.post('/action', function (req, res) {
 
                                             if (typeof startStation.lat === 'undefined') {
                                                 console.log('define start station')
+                                                console.log(steps[i].departure_stop)
                                                 startStation = {
                                                     lat: steps[i].departure_stop.location.lat,
                                                     long: steps[i].departure_stop.location.lng,
                                                     text: steps[i].departure_stop.name,
-                                                }
+                                                };
+                                                console.log(startStation)
+                                                console.log('after define start station')
                                             }
 
                                             if (i !== 0) {
