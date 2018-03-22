@@ -219,15 +219,6 @@ app.post('/action', function (req, res) {
             var startStation = {};
             var fromHome = {};
 
-            if (addressCode.length > 0) {
-                client.query("SELECT * FROM users WHERE fb_id = '" + facebookId + "' AND address_code = '" + addressCode + "'", function(err, result) {
-                    for (var i in result.rows) {
-                        fromHome = result.rows[i];
-                        console.log(fromHome)
-                    }
-                });
-            }
-
             for (var i = 0, len = contexts.length; i < len; i++) {
                 if (contexts[i].name == 'webhooktravelroute-followup') {
                    to = contexts[i].parameters['street-address-to'];
@@ -244,121 +235,248 @@ app.post('/action', function (req, res) {
                 from = req.body.result.parameters['street-address-from'];
             }
 
-            googleMapsClient.geocode({
-                address: from
-            }, function(err, response) {
-                if (!err) {
-                    if (typeof latLngFrom.lat === 'undefined' && typeof fromHome.address_text === 'undefined') {
-                        latLngFrom = {
-                            lat: response.json.results[0].geometry.location.lat,
-                            lng: response.json.results[0].geometry.location.lng
-                        }
-                    } else if (typeof fromHome.address_text !== 'undefined') {
-                        latLngFrom = {
-                            lat: fromHome.lat,
-                            lng: fromHome.lng
-                        }
+            if (addressCode.length > 0) {
+                client.query("SELECT * FROM users WHERE fb_id = '" + facebookId + "' AND address_code = '" + addressCode + "'", function(err, result) {
+                    for (var i in result.rows) {
+                        fromHome = result.rows[i];
                     }
 
                     googleMapsClient.geocode({
-                        address: to
+                        address: from
                     }, function(err, response) {
                         if (!err) {
-                            to = response.json.results[0].formatted_address;
-                            latLngTo = {
-                                lat: response.json.results[0].geometry.location.lat,
-                                lng: response.json.results[0].geometry.location.lng
-                            };
-                            googleMapsClient.directions({
-                                origin: latLngFrom,
-                                destination: to,
-                                mode: 'transit',
-                                language: 'fr',
-                                //mode: 'walking',
-                                //alternatives: true,
-                                transit_mode: ['rail'],
-                                transit_routing_preference: 'fewer_transfers',
+                            if (typeof latLngFrom.lat === 'undefined' && typeof fromHome.address_text === 'undefined') {
+                                latLngFrom = {
+                                    lat: response.json.results[0].geometry.location.lat,
+                                    lng: response.json.results[0].geometry.location.lng
+                                }
+                            } else if (typeof fromHome.address_text !== 'undefined') {
+                                latLngFrom = {
+                                    lat: fromHome.lat,
+                                    lng: fromHome.lng
+                                }
+                            }
+
+                            googleMapsClient.geocode({
+                                address: to
                             }, function(err, response) {
                                 if (!err) {
-                                    var message = '';
-                                    var steps = response.json.routes[0].legs[0].steps;
-                                    for (var i = 0, len = steps.length; i < len; i++) {
-                                        if (steps[i].travel_mode == 'WALKING') {
-                                            if (i === 0) {
-                                                message += 'On va commencer par un peu de marche 👟 Il faut ';
-                                            } else if (i === len - 1) {
-                                                message += ' On est presque arrivé courage 💪, il ne reste plus qu\'à ';
-                                            } else {
-                                                message += ' Il faut ';
+                                    to = response.json.results[0].formatted_address;
+                                    latLngTo = {
+                                        lat: response.json.results[0].geometry.location.lat,
+                                        lng: response.json.results[0].geometry.location.lng
+                                    };
+                                    googleMapsClient.directions({
+                                        origin: latLngFrom,
+                                        destination: to,
+                                        mode: 'transit',
+                                        language: 'fr',
+                                        //mode: 'walking',
+                                        //alternatives: true,
+                                        transit_mode: ['rail'],
+                                        transit_routing_preference: 'fewer_transfers',
+                                    }, function(err, response) {
+                                        if (!err) {
+                                            var message = '';
+                                            var steps = response.json.routes[0].legs[0].steps;
+                                            for (var i = 0, len = steps.length; i < len; i++) {
+                                                if (steps[i].travel_mode == 'WALKING') {
+                                                    if (i === 0) {
+                                                        message += 'On va commencer par un peu de marche 👟 Il faut ';
+                                                    } else if (i === len - 1) {
+                                                        message += ' On est presque arrivé courage 💪, il ne reste plus qu\'à ';
+                                                    } else {
+                                                        message += ' Il faut ';
+                                                    }
+                                                    message += steps[i].html_instructions + ' (' + steps[i].duration.text + ') ';
+                                                }
+                                                if (steps[i].travel_mode == 'TRANSIT') {
+                                                    if (typeof startStation.lat === 'undefined') {
+                                                        startStation = {
+                                                            lat: steps[i].transit_details.departure_stop.location.lat,
+                                                            lng: steps[i].transit_details.departure_stop.location.lng,
+                                                            text: steps[i].transit_details.departure_stop.name,
+                                                        };
+                                                    }
+
+                                                    if (i !== 0) {
+                                                        message += ', ensuite ';
+                                                    }
+                                                    message += 'prends la ligne ' + steps[i].transit_details.line.short_name;
+                                                    message += ' de ' + steps[i].transit_details.departure_stop.name + ' jusqu\'à ' + steps[i].transit_details.arrival_stop.name;
+                                                    message += ' (' + steps[i].html_instructions + ')';
+                                                    message += ' ca te prendra ' + steps[i].duration.text + '. ';
+                                                }
                                             }
-                                            message += steps[i].html_instructions + ' (' + steps[i].duration.text + ') ';
-                                        }
-                                        if (steps[i].travel_mode == 'TRANSIT') {
+
+                                            message += 'Voila, tu es arrivé ! :)🚩';
+
+                                            var card = {};
                                             if (typeof startStation.lat === 'undefined') {
-                                                startStation = {
-                                                    lat: steps[i].transit_details.departure_stop.location.lat,
-                                                    lng: steps[i].transit_details.departure_stop.location.lng,
-                                                    text: steps[i].transit_details.departure_stop.name,
+                                                card = {
+                                                    "buttons": [
+                                                        {
+                                                            "postback": "https://www.google.com/maps/search/?api=1&query=" + to,
+                                                            "text": "Voir dans Gmaps"
+                                                        }
+                                                    ],
+                                                    "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&zoom=16&markers=size:mid%7Ccolor:red%7C" + latLngTo.lat + "," + latLngTo.lng,
+                                                    "platform": "facebook",
+                                                    "title": "Ta destination",
+                                                    "type": 1
+                                                };
+                                            } else {
+                                                card = {
+                                                    "buttons": [
+                                                        {
+                                                            "postback": "https://www.google.com/maps/search/?api=1&query=" + startStation.text,
+                                                            "text": "Voir dans Gmaps"
+                                                        }
+                                                    ],
+                                                    "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&zoom=16&markers=size:mid%7Ccolor:red%7C" + startStation.lat + "," + startStation.lng,
+                                                    "platform": "facebook",
+                                                    "title": "Station de départ",
+                                                    "type": 1
                                                 };
                                             }
 
-                                            if (i !== 0) {
-                                                message += ', ensuite ';
-                                            }
-                                            message += 'prends la ligne ' + steps[i].transit_details.line.short_name;
-                                            message += ' de ' + steps[i].transit_details.departure_stop.name + ' jusqu\'à ' + steps[i].transit_details.arrival_stop.name;
-                                            message += ' (' + steps[i].html_instructions + ')';
-                                            message += ' ca te prendra ' + steps[i].duration.text + '. ';
+                                            res.json({
+                                                "messages": [
+                                                    {
+                                                        "platform": "facebook",
+                                                        "speech": message,
+                                                        "type": 0
+                                                    },
+                                                    card
+                                                ]
+                                            });
                                         }
-                                    }
-
-                                    message += 'Voila, tu es arrivé ! :)🚩';
-
-                                    var card = {};
-                                    if (typeof startStation.lat === 'undefined') {
-                                        card = {
-                                            "buttons": [
-                                                {
-                                                    "postback": "https://www.google.com/maps/search/?api=1&query=" + to,
-                                                    "text": "Voir dans Gmaps"
-                                                }
-                                            ],
-                                            "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&zoom=16&markers=size:mid%7Ccolor:red%7C" + latLngTo.lat + "," + latLngTo.lng,
-                                            "platform": "facebook",
-                                            "title": "Ta destination",
-                                            "type": 1
-                                        };
-                                    } else {
-                                        card = {
-                                            "buttons": [
-                                                {
-                                                    "postback": "https://www.google.com/maps/search/?api=1&query=" + startStation.text,
-                                                    "text": "Voir dans Gmaps"
-                                                }
-                                            ],
-                                            "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&zoom=16&markers=size:mid%7Ccolor:red%7C" + startStation.lat + "," + startStation.lng,
-                                            "platform": "facebook",
-                                            "title": "Station de départ",
-                                            "type": 1
-                                        };
-                                    }
-
-                                    res.json({
-                                        "messages": [
-                                            {
-                                                "platform": "facebook",
-                                                "speech": message,
-                                                "type": 0
-                                            },
-                                            card
-                                        ]
                                     });
                                 }
                             });
                         }
                     });
-                }
-            });
+
+                });
+                //...........................
+            } else {
+                //...........................
+                googleMapsClient.geocode({
+                    address: from
+                }, function(err, response) {
+                    if (!err) {
+                        if (typeof latLngFrom.lat === 'undefined' && typeof fromHome.address_text === 'undefined') {
+                            latLngFrom = {
+                                lat: response.json.results[0].geometry.location.lat,
+                                lng: response.json.results[0].geometry.location.lng
+                            }
+                        } else if (typeof fromHome.address_text !== 'undefined') {
+                            latLngFrom = {
+                                lat: fromHome.lat,
+                                lng: fromHome.lng
+                            }
+                        }
+
+                        googleMapsClient.geocode({
+                            address: to
+                        }, function(err, response) {
+                            if (!err) {
+                                to = response.json.results[0].formatted_address;
+                                latLngTo = {
+                                    lat: response.json.results[0].geometry.location.lat,
+                                    lng: response.json.results[0].geometry.location.lng
+                                };
+                                googleMapsClient.directions({
+                                    origin: latLngFrom,
+                                    destination: to,
+                                    mode: 'transit',
+                                    language: 'fr',
+                                    //mode: 'walking',
+                                    //alternatives: true,
+                                    transit_mode: ['rail'],
+                                    transit_routing_preference: 'fewer_transfers',
+                                }, function(err, response) {
+                                    if (!err) {
+                                        var message = '';
+                                        var steps = response.json.routes[0].legs[0].steps;
+                                        for (var i = 0, len = steps.length; i < len; i++) {
+                                            if (steps[i].travel_mode == 'WALKING') {
+                                                if (i === 0) {
+                                                    message += 'On va commencer par un peu de marche 👟 Il faut ';
+                                                } else if (i === len - 1) {
+                                                    message += ' On est presque arrivé courage 💪, il ne reste plus qu\'à ';
+                                                } else {
+                                                    message += ' Il faut ';
+                                                }
+                                                message += steps[i].html_instructions + ' (' + steps[i].duration.text + ') ';
+                                            }
+                                            if (steps[i].travel_mode == 'TRANSIT') {
+                                                if (typeof startStation.lat === 'undefined') {
+                                                    startStation = {
+                                                        lat: steps[i].transit_details.departure_stop.location.lat,
+                                                        lng: steps[i].transit_details.departure_stop.location.lng,
+                                                        text: steps[i].transit_details.departure_stop.name,
+                                                    };
+                                                }
+
+                                                if (i !== 0) {
+                                                    message += ', ensuite ';
+                                                }
+                                                message += 'prends la ligne ' + steps[i].transit_details.line.short_name;
+                                                message += ' de ' + steps[i].transit_details.departure_stop.name + ' jusqu\'à ' + steps[i].transit_details.arrival_stop.name;
+                                                message += ' (' + steps[i].html_instructions + ')';
+                                                message += ' ca te prendra ' + steps[i].duration.text + '. ';
+                                            }
+                                        }
+
+                                        message += 'Voila, tu es arrivé ! :)🚩';
+
+                                        var card = {};
+                                        if (typeof startStation.lat === 'undefined') {
+                                            card = {
+                                                "buttons": [
+                                                    {
+                                                        "postback": "https://www.google.com/maps/search/?api=1&query=" + to,
+                                                        "text": "Voir dans Gmaps"
+                                                    }
+                                                ],
+                                                "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&zoom=16&markers=size:mid%7Ccolor:red%7C" + latLngTo.lat + "," + latLngTo.lng,
+                                                "platform": "facebook",
+                                                "title": "Ta destination",
+                                                "type": 1
+                                            };
+                                        } else {
+                                            card = {
+                                                "buttons": [
+                                                    {
+                                                        "postback": "https://www.google.com/maps/search/?api=1&query=" + startStation.text,
+                                                        "text": "Voir dans Gmaps"
+                                                    }
+                                                ],
+                                                "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&zoom=16&markers=size:mid%7Ccolor:red%7C" + startStation.lat + "," + startStation.lng,
+                                                "platform": "facebook",
+                                                "title": "Station de départ",
+                                                "type": 1
+                                            };
+                                        }
+
+                                        res.json({
+                                            "messages": [
+                                                {
+                                                    "platform": "facebook",
+                                                    "speech": message,
+                                                    "type": 0
+                                                },
+                                                card
+                                            ]
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
 
             break;
         case "webhook.trafic.unknown.from":
