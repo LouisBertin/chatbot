@@ -316,7 +316,6 @@ app.post('/action', function (req, res) {
                     val = result.rows[i];
 
                     if (currentFbId == val.id) {
-                        console.log('it works')
                         res.json({
                             "speech": "L'adresse de votre entreprise est déjà renseignée",
                         });
