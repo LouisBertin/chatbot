@@ -395,16 +395,6 @@ app.post('/action', function (req, res) {
                                     var issuesMessage = '';
                                     var steps = response.json.routes[0].legs[0].steps;
                                     for (var i = 0, len = steps.length; i < len; i++) {
-                                        if (steps[i].travel_mode == 'WALKING') {
-                                            if (i === 0) {
-                                                message += 'On va commencer par un peu de marche 👟 Il faut ';
-                                            } else if (i === len - 1) {
-                                                message += ' On est presque arrivé courage 💪, il ne reste plus qu\'à ';
-                                            } else {
-                                                message += ' Il faut ';
-                                            }
-                                            message += steps[i].html_instructions + ' (' + steps[i].duration.text + ') ';
-                                        }
                                         if (steps[i].travel_mode == 'TRANSIT') {
                                             if (steps[i].transit_details.line.vehicle.type == 'SUBWAY') {
                                                 var metroLine = steps[i].transit_details.line.short_name;
@@ -441,9 +431,9 @@ app.post('/action', function (req, res) {
                                         }
                                     }
 
-                                    res.json({
-                                        "speech": 'Tout va bien :) tu peux partir tranquille 👍',
-                                    });
+                                    // res.json({
+                                    //     "speech": 'Tout va bien :) tu peux partir tranquille 👍',
+                                    // });
                                 }
                             });
                         }
