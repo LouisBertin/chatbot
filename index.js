@@ -435,11 +435,9 @@ app.post('/action', function (req, res) {
             client.query('SELECT * FROM users WHERE id = ' + displayCurrentWorkplaceAddress, function(err, result) {
                 for (var i in result.rows) {
                     val = result.rows[i];
-                    console.log(val)
-                    console.log(val.address_txt)
-                    console.log(val['address_txt'])
+
                     res.json({
-                        "speech": "Voici votre adresse :",
+                        "speech": "Voici votre adresse : " + val.address_txt,
                     });
                 }
             });
