@@ -21,13 +21,13 @@ app.get('/', function (req, res) {
     var from, to;
 
     googleMapsClient.geocode({
-        address: '6 rue Nolet, Paris'
+        address: '35 quai André Citroën, Paris'
     }, function(err, response) {
         if (!err) {
             from = response.json.results[0].formatted_address;
 
             googleMapsClient.geocode({
-                address: '39 rue de montreuil Vincennes'
+                address: 'Parc des expositions, Villepinte'
             }, function(err, response) {
                 if (!err) {
                     to = response.json.results[0].formatted_address;
@@ -64,6 +64,13 @@ app.get('/', function (req, res) {
                                     message += steps[i].html_instructions + ' (' + steps[i].duration.text + ') ';
                                 }
                                 if (steps[i].travel_mode == 'TRANSIT') {
+                                    if (steps[i].transit_details.line.vehicle.type == 'SUBWAY') {
+                                        console.log('metro ' + steps[i].transit_details.line.short_name)
+                                    }
+                                    if (steps[i].transit_details.line.vehicle.name == 'RER') {
+                                        console.log('rer ' + steps[i].transit_details.line.short_name.replace('RER ', ''))
+                                    }
+
                                     if (i !== 0) {
                                         message += ', ensuite ';
                                     }
