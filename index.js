@@ -217,7 +217,7 @@ app.post('/action', function (req, res) {
             var latLngFrom = {};
             var latLngTo = {};
             var startStation = {};
-            var fromHome = {};
+            var toAddress = {};
 
             for (var i = 0, len = contexts.length; i < len; i++) {
                 if (contexts[i].name == 'webhooktravelroute-followup') {
@@ -238,27 +238,22 @@ app.post('/action', function (req, res) {
             if (addressCode.length > 0) {
                 client.query("SELECT * FROM users WHERE fb_id = '" + facebookId + "' AND address_code = '" + addressCode + "'", function(err, result) {
                     for (var i in result.rows) {
-                        fromHome = result.rows[i];
+                        toAddress = result.rows[i];
                     }
 
                     googleMapsClient.geocode({
                         address: from
                     }, function(err, response) {
                         if (!err) {
-                            if (typeof latLngFrom.lat === 'undefined' && typeof fromHome.address_text === 'undefined') {
+                            if (typeof latLngFrom.lat === 'undefined') {
                                 latLngFrom = {
                                     lat: response.json.results[0].geometry.location.lat,
                                     lng: response.json.results[0].geometry.location.lng
                                 }
-                            } else if (typeof fromHome.address_text !== 'undefined') {
-                                latLngFrom = {
-                                    lat: fromHome.lat,
-                                    lng: fromHome.lng
-                                }
                             }
 
                             googleMapsClient.geocode({
-                                address: to
+                                address: toAddress.address_txt
                             }, function(err, response) {
                                 if (!err) {
                                     to = response.json.results[0].formatted_address;
@@ -365,15 +360,10 @@ app.post('/action', function (req, res) {
                     address: from
                 }, function(err, response) {
                     if (!err) {
-                        if (typeof latLngFrom.lat === 'undefined' && typeof fromHome.address_text === 'undefined') {
+                        if (typeof latLngFrom.lat === 'undefined') {
                             latLngFrom = {
                                 lat: response.json.results[0].geometry.location.lat,
                                 lng: response.json.results[0].geometry.location.lng
-                            }
-                        } else if (typeof fromHome.address_text !== 'undefined') {
-                            latLngFrom = {
-                                lat: fromHome.lat,
-                                lng: fromHome.lng
                             }
                         }
 
