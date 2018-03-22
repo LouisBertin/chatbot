@@ -232,7 +232,7 @@ app.post('/action', function (req, res) {
             break;
         case "webhook.travel.route.from":
             var contexts = req.body.result.contexts;
-            var from = {};
+            var from = 'Place de Clichy';
             var latLngFrom = {};
 
             for (var i = 0, len = contexts.length; i < len; i++) {
@@ -246,11 +246,11 @@ app.post('/action', function (req, res) {
                     }
                 }
             }
-            from = {
-                address: req.body.result.parameters['street-address-from']
-            };
+            from = req.body.result.parameters['street-address-from'];
 
-            googleMapsClient.geocode(from, function(err, response) {
+            googleMapsClient.geocode({
+                address: from
+            }, function(err, response) {
                 if (!err) {
                     //from = response.json.results[0].formatted_address;
                     console.log('before redefine')
