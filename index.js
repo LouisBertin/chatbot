@@ -265,6 +265,10 @@ app.post('/action', function (req, res) {
                                     message += 'Voila, tu es arrivé ! :)🚩';
 
                                     res.json({
+                                        "speech": message,
+                                    });
+
+                                    res.json({
                                         "messages": [
                                             {
                                                 // "buttons": [
