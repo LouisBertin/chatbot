@@ -200,7 +200,10 @@ app.post('/action', function (req, res) {
             });
 
             break;
-        case "webhook.travel.route.from":
+        case "webhook.travel.route.from", "webhook.travel.route.home", "webhook.travel.route.entreprise":
+            console.log('request')
+            console.log(req.body.result)
+
             var contexts = req.body.result.contexts;
             var from = 'Place de Clichy';
             var to = '';
