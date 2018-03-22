@@ -317,12 +317,12 @@ app.post('/action', function (req, res) {
         case "webhook.user.data":
             var currentFbId = parseInt(req.body.originalRequest.data.sender.id)
 
-            client.query('SELECT id FROM users', function(err, result) {
+            client.query("SELECT fb_id FROM users WHERE address_code = 'work'", function(err, result) {
                 // retrieve data : result.rows
                 for (var i in result.rows) {
                     val = result.rows[i];
 
-                    if (currentFbId == val.id) {
+                    if (currentFbId == val.fb_id) {
                         res.json({
                             "speech": "L'adresse de votre entreprise est déjà renseignée",
                         });
@@ -381,13 +381,13 @@ app.post('/action', function (req, res) {
                     var lat = response.json.results[0].geometry.location.lat
                     var lng = response.json.results[0].geometry.location.lng
 
-                    client.query('INSERT INTO users(id, address_code, address_txt, lat, lng) values($1, $2, $3, $4, $5)',
-                        [parseInt(fbuserId), 'work', formated_adress, lat, lng]);
+                    client.query('INSERT INTO users(fb_id, address_code, address_txt, lat, lng) values($1, $2, $3, $4, $5)',
+                        [fbuserId, 'work', formated_adress, lat, lng]);
                 }
             });
 
             break;
-        case  "webhook.user.update.address.custom":
+        case "webhook.user.update.address.custom":
             var newWorkplace = req.body.result.parameters['street-address'];
 
             // geocoding
@@ -431,7 +431,7 @@ app.post('/action', function (req, res) {
                     var lat = response.json.results[0].geometry.location.lat
                     var lng = response.json.results[0].geometry.location.lng
 
-                    client.query('UPDATE users SET address_txt=($1), lat=($2), lng=($3) WHERE id=($4)',
+                    client.query('UPDATE users SET address_txt=($1), lat=($2), lng=($3) WHERE fb_id=($4)',
                         [formated_adress, lat, lng, updateAddressFbuserId]);}
             });
 
@@ -457,9 +457,6 @@ app.post('/action', function (req, res) {
                 // retrieve data : result.rows
                 for (var i in result.rows) {
                     val = result.rows[i];
-
-                    console.log(currentFbIdHome)
-                    console.log(val.fb_id)
 
                     if (currentFbIdHome == val.fb_id) {
                         res.json({
