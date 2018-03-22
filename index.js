@@ -273,8 +273,8 @@ app.post('/action', function (req, res) {
                         if (!err) {
                             to = response.json.results[0].formatted_address;
                             googleMapsClient.directions({
-                                origin: to,
-                                destination: latLngFrom,
+                                origin: latLngFrom,
+                                destination: to,
                                 mode: 'transit',
                                 language: 'fr',
                                 //mode: 'walking',
