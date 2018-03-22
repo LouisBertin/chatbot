@@ -30,8 +30,19 @@ app.get('/', function (req, res) {
             }, function(err, response) {
                 if (!err) {
                     to = response.json.results[0].formatted_address;
+
+                    console.log(response.json.results[0].geometry.location.lat)
+                    console.log(response.json.results[0].geometry.location.lng)
+
                     googleMapsClient.directions({
-                        origin: from,
+                        //origin: [parseFloat(response.json.results[0].geometry.location.lat), parseFloat(response.json.results[0].geometry.location.lng)],
+                        //origin: { lat: response.json.results[0].geometry.location.lat, lng: response.json.results[0].geometry.location.lng },
+                        origin: {
+                            lat: response.json.results[0].geometry.location.lat,
+                            lng: response.json.results[0].geometry.location.lng
+                        },
+                        //origin: '41.43206,-81.38992',
+                        //origin: from,
                         destination: to,
                         //arrival_time: inOneHour,
                         mode: 'transit',
@@ -45,6 +56,8 @@ app.get('/', function (req, res) {
 
                             var message = '';
                             var steps = response.json.routes[0].legs[0].steps;
+
+                            res.json(steps)
                             for (var i = 0, len = steps.length; i < len; i++) {
 
                                 if (steps[i].travel_mode == 'TRANSIT') {
@@ -220,6 +233,7 @@ app.post('/action', function (req, res) {
         case "webhook.travel.route.from":
             var contexts = req.body.result.contexts;
             var from = {};
+            var latLngFrom = {};
 
             for (var i = 0, len = contexts.length; i < len; i++) {
                 if (contexts[i].name == 'webhooktravelroute-followup') {
@@ -228,21 +242,30 @@ app.post('/action', function (req, res) {
                     }
                 }
                 if (contexts[i].name == 'facebook_location') {
-                    console.log(contexts[i].parameters.long)
-                    console.log(contexts[i].parameters.lat)
-
-                    from = {
-                        latLng: {lat: contexts[i].parameters.lat, lng: contexts[i].parameters.long}
+                    latLngFrom = {
+                        lat: contexts[i].parameters.lat,
+                        lng: contexts[i].parameters.long
                     }
                 }
             }
             var to = req.body.result.parameters['street-address-to'];
+            console.log(req.body.result)
 
             googleMapsClient.geocode(from, function(err, response) {
-                console.log(err)
-                console.log( response.json)
                 if (!err) {
-                    from = response.json.results[0].formatted_address;
+                    //from = response.json.results[0].formatted_address;
+                    console.log('before redefine')
+
+                    if (latLngFrom.lat.length <= 0) {
+                        console.log('redefine')
+                        latLngFrom = {
+                            lat: response.json.results[0].geometry.location.lat,
+                            lng: response.json.results[0].geometry.location.lng
+                        }
+                    }
+
+                    console.log(latLngFrom)
+                    console.log(to)
 
                     googleMapsClient.geocode({
                         address: to
@@ -251,7 +274,7 @@ app.post('/action', function (req, res) {
                             to = response.json.results[0].formatted_address;
                             googleMapsClient.directions({
                                 origin: to,
-                                destination: from,
+                                destination: latLngFrom,
                                 mode: 'transit',
                                 language: 'fr',
                                 //mode: 'walking',
@@ -259,6 +282,12 @@ app.post('/action', function (req, res) {
                                 transit_mode: ['rail'],
                                 transit_routing_preference: 'fewer_transfers',
                             }, function(err, response) {
+
+                                console.log(to);
+                                console.log(latLngFrom);
+                                console.log(err);
+                                console.log(response.json.routes[0]);
+
                                 if (!err) {
                                     var message = '';
                                     var steps = response.json.routes[0].legs[0].steps;
