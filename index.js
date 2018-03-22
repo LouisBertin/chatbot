@@ -545,6 +545,55 @@ app.post('/action', function (req, res) {
             });
 
             break;
+        case "webhook.user.update.home.custom":
+            var newHome = req.body.result.parameters['street-address'];
+
+            // geocoding
+            googleMapsClient.geocode({
+                address: newHome
+            }, function(err, response) {
+                if (!err) {
+                    let formated_adress = response.json.results[0].formatted_address
+                    var lat = response.json.results[0].geometry.location.lat
+                    var lng = response.json.results[0].geometry.location.lng
+
+                    res.json({
+                        "messages": [
+                            {
+                                "buttons": [
+                                    {
+                                        "postback": "https://www.google.com/maps/search/?api=1&query=" + formated_adress,
+                                        "text": "Voir mon domicile"
+                                    }
+                                ],
+                                "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&zoom=16&markers=size:mid%7Ccolor:red%7C"+lat+","+lng,
+                                "platform": "facebook",
+                                "title": "C'est ici ?",
+                                "type": 1
+                            }
+                        ]
+                    });
+                }
+            });
+
+            break;
+        case "webhook.user.update.home.custom.yes":
+            var updateHomeFbuserId = req.body.originalRequest.data.sender.id
+            var updateHomeFbuser = req.body.result.contexts[0].parameters['street-address'];
+
+            googleMapsClient.geocode({
+                address: updateHomeFbuser
+            }, function(err, response) {
+                if (!err) {
+                    var formated_adress = response.json.results[0].formatted_address
+                    var lat = response.json.results[0].geometry.location.lat
+                    var lng = response.json.results[0].geometry.location.lng
+
+                    client.query('UPDATE users SET address_txt=($1), lat=($2), lng=($3) WHERE fb_id=($4) AND address_code=($5)',
+                        [formated_adress, lat, lng, updateHomeFbuserId, 'home']);}
+            });
+
+            break;
 
     }
 })
