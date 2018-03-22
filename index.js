@@ -486,6 +486,24 @@ app.post('/action', function (req, res) {
             });
 
             break
+        case "webhook.user.data.workplace.yes":
+            var fbuserIdHome = req.body.originalRequest.data.sender.id
+            var addressHome = req.body.result.contexts[0].parameters['street-address'];
+
+            googleMapsClient.geocode({
+                address: addressHome
+            }, function(err, response) {
+                if (!err) {
+                    var formated_adress = response.json.results[0].formatted_address
+                    var lat = response.json.results[0].geometry.location.lat
+                    var lng = response.json.results[0].geometry.location.lng
+
+                    client.query('INSERT INTO users(id, address_code, address_txt, lat, lng) values($1, $2, $3, $4, $5)',
+                        [parseInt(fbuserId), 'home', formated_adress, lat, lng]);
+                }
+            });
+
+            break;
 
     }
 })
