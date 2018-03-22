@@ -284,6 +284,8 @@ app.post('/action', function (req, res) {
                                             },
                                             {
                                                 "text": message,
+                                                "platform": "facebook",
+                                                "type": 1
                                             }
                                         ]
                                     });
