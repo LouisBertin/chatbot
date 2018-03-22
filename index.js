@@ -32,14 +32,11 @@ app.get('/', function (req, res) {
                 if (!err) {
                     to = response.json.results[0].formatted_address;
                     googleMapsClient.directions({
-                        //origin: [parseFloat(response.json.results[0].geometry.location.lat), parseFloat(response.json.results[0].geometry.location.lng)],
-                        //origin: { lat: response.json.results[0].geometry.location.lat, lng: response.json.results[0].geometry.location.lng },
-                        origin: {
-                            lat: response.json.results[0].geometry.location.lat,
-                            lng: response.json.results[0].geometry.location.lng
-                        },
-                        //origin: '41.43206,-81.38992',
-                        //origin: from,
+                        // origin: {
+                        //     lat: response.json.results[0].geometry.location.lat,
+                        //     lng: response.json.results[0].geometry.location.lng
+                        // },
+                        origin: from,
                         destination: to,
                         //arrival_time: inOneHour,
                         mode: 'transit',
@@ -54,14 +51,26 @@ app.get('/', function (req, res) {
                             var message = '';
                             var steps = response.json.routes[0].legs[0].steps;
 
-                            res.json(steps)
+                            //res.json(steps)
                             for (var i = 0, len = steps.length; i < len; i++) {
-
+                                if (steps[i].travel_mode == 'WALKING') {
+                                    if (i === 0) {
+                                        message += 'On va commencer par un peu de marche :) Il faut ';
+                                    } else if (i === len - 1) {
+                                        message += ' On est presque arrivé courage 💪, il ne reste plus qu\'au ';
+                                    } else {
+                                        message += ' Il faut ';
+                                    }
+                                    message += steps[i].html_instructions + ' (' + steps[i].duration.text + ') ';
+                                }
                                 if (steps[i].travel_mode == 'TRANSIT') {
-                                    message += 'Prend la ligne ' + steps[i].transit_details.line.short_name;
+                                    if (i !== 0) {
+                                        message += ', ensuite ';
+                                    }
+                                    message += 'prend la ligne ' + steps[i].transit_details.line.short_name;
                                     message += ' de ' + steps[i].transit_details.departure_stop.name + ' jusque ' + steps[i].transit_details.arrival_stop.name;
-                                    message += "\n " + steps[i].html_instructions;
-                                    message += "\n (" + steps[i].duration.text + ")";
+                                    message += ' (' + steps[i].html_instructions + ')';
+                                    message += ' ca te prendra ' + steps[i].duration.text + '. ';
                                 }
                             }
 
@@ -237,23 +246,28 @@ app.post('/action', function (req, res) {
                                     var message = '';
                                     var steps = response.json.routes[0].legs[0].steps;
                                     for (var i = 0, len = steps.length; i < len; i++) {
-
+                                        if (steps[i].travel_mode == 'WALKING') {
+                                            if (i === 0) {
+                                                message += 'On va commencer par un peu de marche 👟 Il faut ';
+                                            } else if (i === len - 1) {
+                                                message += ' On est presque arrivé courage 💪, il ne reste plus qu\'au ';
+                                            } else {
+                                                message += ' Il faut ';
+                                            }
+                                            message += steps[i].html_instructions + ' (' + steps[i].duration.text + ') ';
+                                        }
                                         if (steps[i].travel_mode == 'TRANSIT') {
-                                            message += 'prend la ligne ' + steps[i].transit_details.line.short_name;
-                                            message += ' de ' + steps[i].transit_details.departure_stop.name + ' jusque ' + steps[i].transit_details.arrival_stop.name;
+                                            if (i !== 0) {
+                                                message += ', ensuite ';
+                                            }
+                                            message += 'prends la ligne ' + steps[i].transit_details.line.short_name;
+                                            message += ' de ' + steps[i].transit_details.departure_stop.name + ' jusqu\'à ' + steps[i].transit_details.arrival_stop.name;
                                             message += ' (' + steps[i].html_instructions + ')';
                                             message += ' ca te prendra ' + steps[i].duration.text + '. ';
-                                            if (i < len - 1) {
-                                                message += 'Après tu ';
-                                            }
                                         }
                                     }
 
-                                    if (message.length == 0) {
-                                        message = 'Le plus rapide c\'est à pied :)👟';
-                                    } else {
-                                        message += 'es arrivé ! :)🚩';
-                                    }
+                                    message += 'Voila, tu es arrivé ! :)🚩';
 
                                     res.json({
                                         "speech": message,
