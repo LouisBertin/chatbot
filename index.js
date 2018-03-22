@@ -198,6 +198,7 @@ app.post('/action', function (req, res) {
             var from = 'Place de Clichy';
             var to = '';
             var latLngFrom = {};
+            var latLngTo = {};
             var startStation = {};
 
             for (var i = 0, len = contexts.length; i < len; i++) {
@@ -232,6 +233,10 @@ app.post('/action', function (req, res) {
                     }, function(err, response) {
                         if (!err) {
                             to = response.json.results[0].formatted_address;
+                            latLngTo = {
+                                lat: response.json.results[0].geometry.location.lat,
+                                lng: response.json.results[0].geometry.location.lng
+                            };
                             googleMapsClient.directions({
                                 origin: latLngFrom,
                                 destination: to,
@@ -277,8 +282,34 @@ app.post('/action', function (req, res) {
 
                                     message += 'Voila, tu es arrivé ! :)🚩';
 
-                                    console.log(startStation.lat);
-                                    console.log(startStation.lng);
+                                    var card = {};
+                                    if (typeof startStation.lat === 'undefined') {
+                                        card = {
+                                            "buttons": [
+                                                {
+                                                    "postback": "https://www.google.com/maps/search/?api=1&query=" + to,
+                                                    "text": "Voir dans Gmaps"
+                                                }
+                                            ],
+                                            "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&zoom=16&markers=size:mid%7Ccolor:red%7C" + latLngTo.lat + "," + latLngTo.lng,
+                                            "platform": "facebook",
+                                            "title": "Ta destination",
+                                            "type": 1
+                                        };
+                                    } else {
+                                        card = {
+                                            "buttons": [
+                                                {
+                                                    "postback": "https://www.google.com/maps/search/?api=1&query=" + startStation.text,
+                                                    "text": "Voir dans Gmaps"
+                                                }
+                                            ],
+                                            "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&zoom=16&markers=size:mid%7Ccolor:red%7C" + startStation.lat + "," + startStation.lng,
+                                            "platform": "facebook",
+                                            "title": "Station de départ",
+                                            "type": 1
+                                        };
+                                    }
 
                                     res.json({
                                         "messages": [
@@ -287,18 +318,7 @@ app.post('/action', function (req, res) {
                                                 "speech": message,
                                                 "type": 0
                                             },
-                                            {
-                                                "buttons": [
-                                                    {
-                                                        "postback": "https://www.google.com/maps/search/?api=1&query=" + startStation.text,
-                                                        "text": "Voir dans Gmaps"
-                                                    }
-                                                ],
-                                                "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&zoom=16&markers=size:mid%7Ccolor:red%7C" + startStation.lat + "," + startStation.lng,
-                                                "platform": "facebook",
-                                                "title": "Station de départ",
-                                                "type": 1
-                                            }
+                                            card
                                         ]
                                     });
                                 }
