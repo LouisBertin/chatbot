@@ -253,7 +253,10 @@ app.post('/action', function (req, res) {
             googleMapsClient.geocode(from, function(err, response) {
                 if (!err) {
                     //from = response.json.results[0].formatted_address;
+                    console.log('before redefine')
+
                     if (latLngFrom.lat.length <= 0) {
+                        console.log('redefine')
                         latLngFrom = {
                             lat: response.json.results[0].geometry.location.lat,
                             lng: response.json.results[0].geometry.location.lng
