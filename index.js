@@ -412,6 +412,23 @@ app.post('/action', function (req, res) {
             });
 
             break;
+        case "webhook.user.update.address.custom.yes":
+            var updateAddressFbuserId = req.body.originalRequest.data.sender.id
+            var updateAddressFbuser = req.body.result.contexts[0].parameters['street-address'];
+
+            googleMapsClient.geocode({
+                address: updateAddressFbuser
+            }, function(err, response) {
+                if (!err) {
+                    var formated_adress = response.json.results[0].formatted_address
+                    var lat = response.json.results[0].geometry.location.lat
+                    var lng = response.json.results[0].geometry.location.lng
+
+                    client.query("UPDATE users SET address_txt = "+formated_adress+", lat = "+lat+", lng = "+lng+" WHERE id ="+updateAddressFbuserId);
+                }
+            });
+
+            break;
     }
 })
 
