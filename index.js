@@ -80,9 +80,9 @@ app.get('/', function (req, res) {
 })
 
 app.get('/gmap', function (req, res) {
-    var data = helper.getUserAddress(1411203568983927, 'work')
-
-    res.json(data)
+    helper.getUserAddress(1411203568983927, 'work', function(err, result) {
+        res.json(result.rows);
+    });
 })
 
 app.post('/action', function (req, res) {

@@ -2,10 +2,8 @@ const connectionString = "postgres://rmwavbfvtbeyss:3825e353072eeb06ef4687fc7655
 var client = new pg.Client(connectionString);
 client.connect();
 
-function getUserAddress (id, addressCode) {
-    client.query('SELECT * FROM users WHERE id = '+id+', address_code = ' + addressCode, function(err, result) {
-        return result.rows
-    });
+function getUserAddress (id, addressCode, callback) {
+    client.query('SELECT * FROM users WHERE id = '+id+', address_code = ' + addressCode, callback);
 }
 
 module.exports = {
