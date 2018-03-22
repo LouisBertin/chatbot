@@ -10,6 +10,7 @@ const pg = require('pg');
 const connectionString = "postgres://rmwavbfvtbeyss:3825e353072eeb06ef4687fc7655ae68b7a99c4c7c51e26e67026801cd30ceee@ec2-54-204-44-140.compute-1.amazonaws.com:5432/dalifn8rdhdpfm"
 var client = new pg.Client(connectionString);
 client.connect();
+var helper = require('helper')
 
 const app = express()
 app.use(bodyParser.json()); // support json encoded bodies
@@ -79,7 +80,7 @@ app.get('/', function (req, res) {
 })
 
 app.get('/gmap', function (req, res) {
-    var data = getUserAddress(1411203568983927, 'work')
+    var data = helper.getUserAddress(1411203568983927, 'work')
 
     res.json(data)
 })
