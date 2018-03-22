@@ -260,7 +260,7 @@ app.post('/action', function (req, res) {
                                             if (typeof startStation.lat === 'undefined') {
                                                 startStation = {
                                                     lat: steps[i].transit_details.departure_stop.location.lat,
-                                                    long: steps[i].transit_details.departure_stop.location.lng,
+                                                    lng: steps[i].transit_details.departure_stop.location.lng,
                                                     text: steps[i].transit_details.departure_stop.name,
                                                 };
                                             }
