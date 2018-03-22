@@ -380,6 +380,38 @@ app.post('/action', function (req, res) {
             });
 
             break;
+        case  "webhook.user.update.address.custom":
+            var newWorkplace = req.body.result.parameters['street-address'];
+
+            // geocoding
+            googleMapsClient.geocode({
+                address: newWorkplace
+            }, function(err, response) {
+                if (!err) {
+                    let formated_adress = response.json.results[0].formatted_address
+                    var lat = response.json.results[0].geometry.location.lat
+                    var lng = response.json.results[0].geometry.location.lng
+
+                    res.json({
+                        "messages": [
+                            {
+                                "buttons": [
+                                    {
+                                        "postback": "https://www.google.com/maps/search/?api=1&query=" + formated_adress,
+                                        "text": "Voir mon lieu de travail"
+                                    }
+                                ],
+                                "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&zoom=16&markers=size:mid%7Ccolor:red%7C"+lat+","+lng,
+                                "platform": "facebook",
+                                "title": "Cela correspond ?",
+                                "type": 1
+                            }
+                        ]
+                    });
+                }
+            });
+
+            break;
     }
 })
 
