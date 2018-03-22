@@ -293,7 +293,7 @@ app.post('/action', function (req, res) {
                                             ],
                                             "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&zoom=16&markers=size:mid%7Ccolor:red%7C" + latLngTo.lat + "," + latLngTo.lng,
                                             "platform": "facebook",
-                                            "title": "Station de départ",
+                                            "title": "Ta destination",
                                             "type": 1
                                         };
                                     } else {
