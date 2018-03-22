@@ -320,6 +320,7 @@ app.post('/action', function (req, res) {
                         res.json({
                             "speech": "L'adresse de votre entreprise est déjà renseignée",
                         });
+                        return false;
                     }
                 }
 
