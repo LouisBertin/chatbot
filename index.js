@@ -391,79 +391,63 @@ app.post('/action', function (req, res) {
                                 transit_routing_preference: 'fewer_transfers',
                             }, function(err, response) {
                                 if (!err) {
-                                    var message = '';
+                                    var issuesMessage = '';
                                     var steps = response.json.routes[0].legs[0].steps;
                                     for (var i = 0, len = steps.length; i < len; i++) {
-                                        if (steps[i].travel_mode == 'WALKING') {
-                                            if (i === 0) {
-                                                message += 'On va commencer par un peu de marche 👟 Il faut ';
-                                            } else if (i === len - 1) {
-                                                message += ' On est presque arrivé courage 💪, il ne reste plus qu\'à ';
-                                            } else {
-                                                message += ' Il faut ';
-                                            }
-                                            message += steps[i].html_instructions + ' (' + steps[i].duration.text + ') ';
-                                        }
                                         if (steps[i].travel_mode == 'TRANSIT') {
-                                            if (typeof startStation.lat === 'undefined') {
-                                                startStation = {
-                                                    lat: steps[i].transit_details.departure_stop.location.lat,
-                                                    lng: steps[i].transit_details.departure_stop.location.lng,
-                                                    text: steps[i].transit_details.departure_stop.name,
-                                                };
-                                            }
+                                            if (steps[i].transit_details.line.vehicle.type == 'SUBWAY') {
+                                                var metroLine = steps[i].transit_details.line.short_name;
+                                                var apiUrl = 'https://api-ratp.pierre-grimaud.fr/v3/traffic/metros/' + metroLine + '?_format=json';
 
-                                            if (i !== 0) {
-                                                message += ', ensuite ';
+                                                axios.get(apiUrl).then(function(response) {
+                                                    if (response.data.result.slug === 'alerte') {
+                                                        issuesMessage = 'Aïe, pour le métro on a un soucis sur la ligne ' + metroLine + ' : ' + response.data.result.message + ' ⚠🚇';
+                                                        res.json({
+                                                            "speech": issuesMessage,
+                                                        });
+
+                                                        return false;
+                                                    }
+                                                    if (response.data.result.slug === 'normal_trav') {
+                                                        issuesMessage = 'Fais attention aux horaires des travaux du métro sur la ligne ' + metroLine + ' : ' + response.data.result.message + ' 🚧🚇';
+                                                        res.json({
+                                                            "speech": issuesMessage,
+                                                        });
+
+                                                        return false;
+                                                    }
+                                                }).catch(function(error) {
+                                                    issuesMessage = error;
+                                                });
                                             }
-                                            message += 'prends la ligne ' + steps[i].transit_details.line.short_name;
-                                            message += ' de ' + steps[i].transit_details.departure_stop.name + ' jusqu\'à ' + steps[i].transit_details.arrival_stop.name;
-                                            message += ' (' + steps[i].html_instructions + ')';
-                                            message += ' ca te prendra ' + steps[i].duration.text + '. ';
+                                            if (steps[i].transit_details.line.vehicle.name == 'RER') {
+                                                var rerLine = steps[i].transit_details.line.short_name.replace('RER ', '');
+                                                var apiUrl = 'https://api-ratp.pierre-grimaud.fr/v3/traffic/rers/' + rerLine + '?_format=json';
+
+                                                axios.get(apiUrl).then(function(response) {
+                                                    console.log(response.data.result)
+                                                    if (response.data.result.slug === 'alerte') {
+                                                        issuesMessage = 'Oula on a des soucis avec le RER sur la ligne ' + rerLine + ' : ' + response.data.result.message + ' ⚠🚇';
+                                                        res.json({
+                                                            "speech": issuesMessage,
+                                                        });
+
+                                                        return false;
+                                                    }
+                                                    if (response.data.result.slug === 'normal_trav') {
+                                                        issuesMessage = 'Fais attention aux horaires des travaux de la ligne ' + rerLine + ' : ' + response.data.result.message + ' 🚧🚇';
+                                                        res.json({
+                                                            "speech": issuesMessage,
+                                                        });
+
+                                                        return false;
+                                                    }
+                                                }).catch(function(error) {
+                                                    issuesMessage = error;
+                                                });
+                                            }
                                         }
                                     }
-
-                                    message += 'Voila, tu es arrivé ! :)🚩';
-
-                                    var card = {};
-                                    if (typeof startStation.lat === 'undefined') {
-                                        card = {
-                                            "buttons": [
-                                                {
-                                                    "postback": "https://www.google.com/maps/search/?api=1&query=" + to,
-                                                    "text": "Voir dans Gmaps"
-                                                }
-                                            ],
-                                            "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&zoom=16&markers=size:mid%7Ccolor:red%7C" + latLngTo.lat + "," + latLngTo.lng,
-                                            "platform": "facebook",
-                                            "title": "Ta destination",
-                                            "type": 1
-                                        };
-                                    } else {
-                                        card = {
-                                            "buttons": [
-                                                {
-                                                    "postback": "https://www.google.com/maps/search/?api=1&query=" + startStation.text,
-                                                    "text": "Voir dans Gmaps"
-                                                }
-                                            ],
-                                            "imageUrl": "https://maps.googleapis.com/maps/api/staticmap?size=512x512&maptype=roadmap&zoom=16&markers=size:mid%7Ccolor:red%7C" + startStation.lat + "," + startStation.lng,
-                                            "platform": "facebook",
-                                            "title": "Station de départ",
-                                            "type": 1
-                                        };
-                                    }
-
-                                    res.json({
-                                        "messages": [
-                                            {
-                                                "platform": "facebook",
-                                                "speech": message,
-                                                "type": 0
-                                            },
-                                            card
-                                        ]
-                                    });
                                 }
                             });
                         }
