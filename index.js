@@ -204,7 +204,7 @@ app.post('/action', function (req, res) {
             break;
         case "webhook.travel.route.home.from":
             addressCode = 'home';
-        case "webhook.travel.route.entreprise.from":
+        case "webhook.travel.route.work.from":
             if (addressCode.length <= 0) {
                 addressCode = 'work';
             }
