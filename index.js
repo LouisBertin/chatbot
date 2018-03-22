@@ -440,7 +440,7 @@ app.post('/action', function (req, res) {
                         "speech": "Voici votre adresse :",
                     });
                 }
-            }
+            });
 
             break;
     }
