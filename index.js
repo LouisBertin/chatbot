@@ -271,9 +271,6 @@ app.post('/action', function (req, res) {
                                     res.json({
                                         "messages": [
                                             {
-                                                "text": message,
-                                            },
-                                            {
                                                 "buttons": [
                                                     {
                                                         "postback": "https://www.google.com/maps/search/?api=1&query=" + to,
@@ -284,6 +281,9 @@ app.post('/action', function (req, res) {
                                                 "platform": "facebook",
                                                 "title": "Cela correspond ?",
                                                 "type": 1
+                                            },
+                                            {
+                                                "text": message,
                                             }
                                         ]
                                     });
