@@ -160,19 +160,36 @@ app.post('/action', function (req, res) {
             break;
         case "webhook.travel.time.from":
             var contexts = req.body.result.contexts;
+            var from = 'Place de Clichy';
+            var to = '';
+            var latLngFrom = {};
 
             for (var i = 0, len = contexts.length; i < len; i++) {
                 if (contexts[i].name == 'webhooktraveltime-followup') {
-                    var from = contexts[i].parameters['street-address-from'];
+                    to = contexts[i].parameters['street-address-to'];
+                }
+                if (contexts[i].name == 'facebook_location') {
+                    latLngFrom = {
+                        lat: contexts[i].parameters.lat,
+                        lng: contexts[i].parameters.long
+                    }
                 }
             }
-            var to = req.body.result.parameters['street-address-to'];
+            if (typeof latLngFrom.lat === 'undefined') {
+                from = req.body.result.parameters['street-address-from'];
+            }
 
             googleMapsClient.geocode({
                 address: from
             }, function(err, response) {
                 if (!err) {
                     from = response.json.results[0].formatted_address;
+                    if (typeof latLngFrom.lat === 'undefined') {
+                        latLngFrom = {
+                            lat: response.json.results[0].geometry.location.lat,
+                            lng: response.json.results[0].geometry.location.lng
+                        }
+                    }
 
                     googleMapsClient.geocode({
                         address: to
@@ -180,7 +197,7 @@ app.post('/action', function (req, res) {
                         if (!err) {
                             to = response.json.results[0].formatted_address;
                             googleMapsClient.directions({
-                                origin: from,
+                                origin: latLngFrom,
                                 destination: to,
                                 mode: 'transit',
                                 language: 'fr',
